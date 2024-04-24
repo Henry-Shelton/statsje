@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+            
+<url>
+  <loc>https://stats.je/</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://stats.je/calendar</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/insights</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/forecasts</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/comparisons</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/about</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/econandbusiness</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/employmentandhousing</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/populationandsociety</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/healthandgov</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/offerings</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/econandbusiness/gdp</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/econandbusiness/gva</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/econandbusiness/inflation</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/econandbusiness/performance</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/econandbusiness/outlook</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/employmentandhousing/hpi</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/employmentandhousing/averagehouseprice</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/employmentandhousing/transactions</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/employmentandhousing/employment</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/employmentandhousing/employmentbysector</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/populationandsociety/populationandmigration</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/populationandsociety/birthsdeaths</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/populationandsociety/populationpyramid</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/populationandsociety/census</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/healthandgov/health</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/healthandgov/behaviouralhealthtrends</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/healthandgov/lifeexpectancy</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/healthandgov/immunisation</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/healthandgov/govreports</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/reports</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/AI</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/tools</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/enquire</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/reports/public2023</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/prospects</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/help</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/gdpSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/gvaSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/rpiySL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/economicactivitygrowthSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/futurebusinessemploySL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/hpiSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/averagehousepriceSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/transactionsSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/employmentSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/employmentcomparisonSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/populationandsociety/populationandmigrationSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/populationandsociety/birthdeathsSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/populationandsociety/populationpyramidSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/obesitySL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/behaviouralhealthtrendsSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/lifeexpectancySL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/fluSL</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/reports/business2023</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/gdp</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/gdpgrowth</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/gdppercapita</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/gva</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/rpiy</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/rpi</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/rpichange</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/economicactivitygrowth</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/costsprices</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/financialhealth</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/futurebusinessemploy</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/econandbusiness/futureprices</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/hpi</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/affordability</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/averagehouseprice</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/transactions</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/transactionsbytype</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/transactionsbyparish</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/unemployment</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/employmentchange</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/employment</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/employmentcomparison</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/employmentprimary</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/employmentsecondary</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/employmentandhousing/employmenttertiary</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/populationandsociety/populationandmigration</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/populationandsociety/populationchange</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/populationandsociety/populationmigrationchange</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/populationandsociety/births</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/populationandsociety/deaths</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/populationandsociety/populationpyramid</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/populationandsociety/populationpyramid2010</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/obesity</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/illness</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/activity</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/alcohol</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/smoking</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/lifeexpectancy</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/healthandgov/flu</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/api/reports/public/tnse</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://stats.je/favicon.ico</loc>
+  <lastmod>2024-01-16T01:49:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+</urlset>

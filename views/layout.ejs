@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+
+   <head>
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-TPX1RN22P5"></script>
+      <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+         gtag('config', 'G-TPX1RN22P5');
+      </script>
+
+      <title><%= title %></title>
+      <meta name="description" content="<%= meta %>">
+
+      <link rel="icon" href="/favicon.ico" type="image/x-icon">
+      <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+      <meta charset="utf-8">
+      <meta content="width=device-width,initial-scale=1.0,user-scalable=1" name="viewport">
+      <link rel="stylesheet" href="https://cdn.ons.gov.uk/sixteens/749a88b/css/main.css">
+
+   </head>
+
+
+
+   <header class="custom-header">
+      <a class="skiplink" href="#main" tabindex="0">Skip to main content</a>
+      <div id="pagePath" class="hide"></div>
+      <div class="wrapper">
+         <div class="header col-wrap">
+            <div class="col col--lg-one-third col--md-one-third">
+               <a id="logo-link" href="/">
+               <img class="logo" src="\assets\img\statsJE.png" alt="statsJE">
+               </a>
+            </div>
+            <div class="col col--lg-two-thirds col--md-two-thirds hide--sm print--hide language--js__container">
+               <div class="language">
+                  English (EN)
+               </div>
+            </div>
+            <div class="secondary-nav col print--hide">
+               <ul id="nav-secondary" class="secondary-nav__list js-nav-clone__list">
+                  <li class="secondary-nav__item">
+                     <a class="secondary-nav__link js-nav-clone__link" href="/calendar">📅 Economic Calendar</a>
+                  </li>
+                  <li class="secondary-nav__item">
+                     <a class="secondary-nav__link js-nav-clone__link" href="/insights">📰 News & Insights</a>
+                  </li>
+                  <li class="secondary-nav__item">
+                     <a class="secondary-nav__link js-nav-clone__link" href="/forecasts">📈 Forecasts</a>
+                  </li>
+                  <li class="secondary-nav__item">
+                     <a class="secondary-nav__link js-nav-clone__link" href="/comparisons">🌐 Comparisons</a>
+                  </li>
+                  <li class="secondary-nav__item">
+                     <a class="secondary-nav__link js-nav-clone__link" href="/about">ℹ️ About</a>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+
+
+
+      <!-- NAV BAR -->  
+      <div class="primary-nav print--hide" style="background-color: #d01c1c;">
+         <nav aria-label="Site navigation">
+            <ul class="nav--controls" style="list-style: none; padding: 0; margin: 0;">
+               <li class="nav--controls__item" style="display: block; width: 100%; position: relative;">
+                  <a id="menu-toggle" class="nav--controls__menu" style="text-decoration: none; color: black; background-color: #dc3030; display: block; padding: 25px 20px; cursor: pointer;" onclick="toggleDropdown()">
+                  <span class="nav--controls__text" style="color: white;"><strong>Menu</strong></span>
+                  </a>
+                  <div id="menu-dropdown" class="nav--controls__dropdown" style="display: none; position: absolute; background-color: #dc3030; min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); z-index: 1; width: 100%;">
+                     <a href="/" style="color: white; padding: 12px 16px; text-decoration: none; display: block;"><strong>Home</strong></a>
+                     <a href="/calendar" style="color: white; padding: 12px 16px; text-decoration: none; display: block;"><strong>Economic Calendar</strong></a>
+                     <a href="/insights" style="color: white; padding: 12px 16px; text-decoration: none; display: block;"><strong>News & Insights</strong></a>
+                     <a href="/econandbusiness" style="color: white; padding: 12px 16px; text-decoration: none; display: block;"><strong>Economy and Business</strong></a>
+                     <a href="/employmentandhousing" style="color: white; padding: 12px 16px; text-decoration: none; display: block;"><strong>Housing and Employment</strong></a>
+                     <a href="/populationandsociety" style="color: white; padding: 12px 16px; text-decoration: none; display: block;"><strong>Population and Society</strong></a>
+                     <a href="/healthandgov" style="color: white; padding: 12px 16px; text-decoration: none; display: block;"><strong>Health and Gov Statistics</strong></a>
+                     <a href="/forecasts" style="color: white; padding: 12px 16px; text-decoration: none; display: block;"><strong>Forecasts</strong></a>
+                     <a href="/comparisons" style="color: white; padding: 12px 16px; text-decoration: none; display: block;"><strong>Comparisons</strong></a>
+                     <a href="/offerings" style=" background-color: black; color: white; padding: 12px 16px; text-decoration: none; display: block;"><strong>Stats.JE Reports and Solutions</strong></a>
+                  </div>
+               </li>
+            </ul>
+
+
+
+            <script>
+               function toggleDropdown() {
+                 var dropdown = document.getElementById("menu-dropdown");
+                 dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+               }
+               
+               window.onclick = function(event) {
+                 var dropdown = document.getElementById("menu-dropdown");
+                 var menuToggle = document.getElementById("menu-toggle");
+                 
+                 // Check if the clicked element is not inside the dropdown or the menu toggle button
+                 if (!event.target.closest('.nav--controls__item') && !event.target.closest('.nav--controls__dropdown')) {
+                   dropdown.style.display = "none";
+                 }
+               };
+               
+               window.onscroll = function() {
+                 var navItem = document.querySelector('.nav--controls__item');
+                 var sticky = navItem.offsetTop;
+               
+                 if (window.pageYOffset > sticky) {
+                   navItem.style.position = "fixed";
+                   navItem.style.top = "0";
+                   navItem.style.width = "100%";
+                   navItem.style.zIndex = "1000";
+                 } else {
+                   navItem.style.position = "relative";
+                   navItem.style.top = "auto";
+                   navItem.style.width = "100%";
+                   navItem.style.zIndex = "auto";
+                 }
+               };
+            </script>
+
+
+
+            <ul class="wrapper nav-main--hidden primary-nav__list" id="nav-primary" aria-expanded="false">
+               <li class="primary-nav__item  js-nav hide--sm old-ie--display-block">
+                  <a class="primary-nav__link col col--md-7 col--lg-9" style="font-weight: bold;" href="/">Home</a>
+               </li>
+
+               <!-- ECONOMY AND BUSINESS -->
+               <li class="primary-nav__item js-nav js-expandable ">
+                  <a class="primary-nav__link col col--md-8 col--lg-10" href="/econandbusiness" aria-expanded="false" aria-label="Jersey's economy and business">
+                  <span aria-hidden="true" class="expansion-indicator"></span>
+                  <span class="submenu-title" style="display: block; font-weight: bold;">
+                  Economy and Business
+                  </span>
+                  </a>
+                  <ul class="primary-nav__child-list col col--md-16 col--lg-20 js-expandable__content js-nav-hidden jsEnhance" aria-expanded="false" aria-label="submenu">
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/econandbusiness/gdp">Gross Domestic Product (GDP)</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/econandbusiness/gva">Gross Value Added (GVA)</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/econandbusiness/inflation">Inflation and RPI</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/econandbusiness/performance">Business Performance</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/econandbusiness/outlook">Business Outlook</a>
+                     </li>
+                  </ul>
+               </li>
+
+               <!-- EMPLOYMENT AND HOUSING -->
+               <li class="primary-nav__item js-nav js-expandable ">
+                  <a class="primary-nav__link col col--md-8 col--lg-10" href="/employmentandhousing" aria-expanded="false" aria-label="Economy sub menu toggle">
+                  <span aria-hidden="true" class="expansion-indicator"></span>
+                  <span class="submenu-title" style="display: block; font-weight: bold;">
+                  Housing and Employment
+                  </span>
+                  </a>
+                  <ul class="primary-nav__child-list col col--md-16 col--lg-20 js-expandable__content js-nav-hidden jsEnhance" aria-expanded="false" aria-label="submenu">
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/employmentandhousing/hpi">House Price Index (HPI & HAI)</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/employmentandhousing/averagehouseprice">Average House Price</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/employmentandhousing/transactions">Property Transaction Data</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/employmentandhousing/employment">Total Employment</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/employmentandhousing/employmentbysector">Employment by Sector</a>
+                     </li>
+                  </ul>
+
+               <!-- POPULATION AND SOCIETY -->
+               <li class="primary-nav__item js-nav js-expandable ">
+                  <a class="primary-nav__link col col--md-8 col--lg-10" href="/populationandsociety" aria-expanded="false" aria-label="Economy sub menu toggle">
+                  <span aria-hidden="true" class="expansion-indicator"></span>
+                  <span class="submenu-title" style="display: block; font-weight: bold;">
+                  Population and Society
+                  </span>
+                  </a>
+                  <ul class="primary-nav__child-list col col--md-16 col--lg-20 js-expandable__content js-nav-hidden jsEnhance" aria-expanded="false" aria-label="submenu">
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/populationandsociety/populationandmigration">Population and Migration</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/populationandsociety/birthsdeaths">Population Dynamics (births/deaths)</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/populationandsociety/populationpyramid">Population Pyramids (age/gender)</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/populationandsociety/census">Census Data</a>
+                     </li>
+                  </ul>
+               </li>
+            
+               <!-- HEALTH AND GOV -->   
+               <li class="primary-nav__item js-nav js-expandable ">
+                  <a class="primary-nav__link col col--md-8 col--lg-10" href="/healthandgov" aria-expanded="false" aria-label="Employment and labour market sub menu toggle">
+                  <span aria-hidden="true" class="expansion-indicator"></span>
+                  <span class="submenu-title" style="display: block; font-weight: bold;">
+                  Health and Gov Statistics
+                  </span>
+                  </a>
+                  <ul class="primary-nav__child-list col col--md-16 col--lg-20 js-expandable__content js-nav-hidden jsEnhance" aria-expanded="false" aria-label="submenu">
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/healthandgov/health">General Health Statistics</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/healthandgov/behaviouralhealthtrends">Behavioural Health Trends</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/healthandgov/lifeexpectancy">Life expectancy</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/healthandgov/immunisation">Immunisation Data</a>
+                     </li>
+                     <li class="primary-nav__child-item  js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/healthandgov/govreports">Gov Reports/Surveys</a>
+                     </li>
+                  </ul>
+               </li>                  
+               
+               <!-- KEY REPORTS -->  
+               <li class="primary-nav__item js-nav js-expandable" style="background-color: black;">
+
+                  <a class="primary-nav__link col col--md-8 col--lg-10" href="/reports" aria-expanded="false" >
+                     <span aria-hidden="true" class="expansion-indicator"></span>
+                     <span class="submenu-title" style="display: block; font-weight: bold;">
+                        <strong>S.JE Reports and Solutions</strong>
+                     </span>
+                  </a>
+                  <ul class="primary-nav__child-list col col--md-16 col--lg-20 js-expandable__content js-nav-hidden jsEnhance" aria-expanded="false" aria-label="submenu">
+                     <li class="primary-nav__child-item js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/reports">Reports</a>
+                     </li>
+                     <li class="primary-nav__child-item js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/AI">AI & ML</a>
+                     </li>
+                     <li class="primary-nav__child-item js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/tools">Tools</a>
+                     </li>
+                     <!-- 
+                        <li class="primary-nav__child-item js-expandable__child">
+                           <a class="primary-nav__child-link" tabindex="-1" href="/offerings">Offerings</a>
+                        </li>
+                     -->
+                     <li class="primary-nav__child-item js-expandable__child">
+                        <a class="primary-nav__child-link" tabindex="-1" href="/enquire">Enquire</a>
+                     </li>
+                  </ul>
+               </li>
+
+            </ul>
+         </nav>
+      </div>
+   </header>
+
+
+
+   <!-- MAIN BODY -->
+   <main>
+   <main id="main" role="main" tabindex="-1">
+      <div class="page-content">
+         <div class="wrapper margin-top--3">
+            <section>
+               <%- body %>
+            </section>
+         </div>
+      </div>
+   </main>
+
+
+
+   <!-- FOOTER -->  
+   <footer class="print--hide padding-top--5" >
+      <section>
+         <h2 class="visuallyhidden">Footer links</h2>
+         <div class="footer" style="background-color: #d01c1c;">
+            <div class="wrapper">
+               <nav aria-label="Footer links">
+                  <div class="footer-nav col-wrap">
+
+                     <!-- ABOUT -->  
+                     <div class="col col--lg-one-third col--md-one-third">
+                        <h2 class="footer-nav__heading">StatsJE</h2>
+                        <ul class="footer-nav__list">
+                           <li class="footer-nav__item">
+                              <a href="/about">About Us</a>
+                           </li>
+                           <li class="footer-nav__item">
+                              <a href="/prospects">What We Do</a>
+                           </li>
+                           <li class="footer-nav__item">
+                              <a href="/sitemap.xml">Sitemap</a>
+                           </li>
+                        </ul>
+                     </div>
+
+                     <!-- HELP -->  
+                     <div class="col col--lg-one-third col--md-one-third">
+                        <h2 class="footer-nav__heading">Help</h2>
+                        <ul class="footer-nav__list">
+                           <li class="footer-nav__item">
+                              <a href="/help">Privacy</a>
+                           </li>
+                           <li class="footer-nav__item">
+                              <a href="/help">Terms and conditions</a>
+                           </li>
+                        </ul>
+                     </div>
+
+                     <!-- CONTACT -->  
+                     <div class="col col--lg-one-third col--md-one-third">
+                        <h2 class="footer-nav__heading">Contact</h2>
+                        <ul class="footer-nav__list">
+                           <li class="footer-nav__item">
+                              <a href="/enquire">Enquire</a>
+                           </li>
+                           <li class="footer-nav__item">
+                              @ 2024 Stats.je
+                           </li>
+                        </ul>
+                     </div>
+
+                  </div>
+               </nav>
+            </div>
+         </div>
+      </section>
+   </footer>
+
+
+
+   <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+   <script defer src="https://cdn.ons.gov.uk/sixteens/749a88b/js/main.js"></script>
+
+
+</html>
