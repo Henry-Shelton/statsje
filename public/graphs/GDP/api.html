@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Raw JSON Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <canvas id="line-chart"></canvas>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=ae620bf3-41be-4461-adb8-2220ab7cb000';
+        var csvContainer = document.getElementById('csv-container'); // Removed this line
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Convert the JSON data to CSV format
+                var csv = jsonToCsv(response);
+                // csvContainer.textContent = csv; // Removed this line
+
+                // Parse the CSV data
+                var csvData = parseCSV(csv);
+
+                // Extract the data for the chart
+                var years = csvData.map(function (row) {
+                    return row.Year;
+                });
+                var gdpValues = csvData.map(function (row) {
+                    return parseFloat(row.GDP);
+                });
+
+                // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                            let x = chart.tooltip._active[0].element.x;
+                            let yAxis = chart.scales.y;
+                            let ctx = chart.ctx;
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.moveTo(x, yAxis.top);
+                            ctx.lineTo(x, yAxis.bottom);
+                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = 'rgba(0, 0, 255, 0.4)';
+                            ctx.stroke();
+                            ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [{
+                            label: 'GDP',
+                            data: gdpValues,
+                            borderColor: 'blue',
+                            fill: false,
+                        }],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'GDP Over the Years', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year', // X-axis title
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'GDP (£ million)', // Y-axis title
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = false; // Hide the legend
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+
+        function jsonToCsv(data) {
+            var csv = '';
+            var keys = Object.keys(data.result.records[0]);
+
+            // Create the header row
+            csv += keys.join(',') + '\n';
+
+            // Create the data rows
+            data.result.records.forEach(function (record) {
+                var values = keys.map(function (key) {
+                    return record[key];
+                });
+                csv += values.join(',') + '\n';
+            });
+
+            return csv;
+        }
+
+        function parseCSV(csv) {
+            var lines = csv.trim().split('\n');
+            var result = [];
+            var headers = lines[0].split(',');
+
+            for (var i = 1; i < lines.length; i++) {
+                var obj = {};
+                var currentline = lines[i].split(',');
+
+                for (var j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = currentline[j];
+                }
+
+                result.push(obj);
+            }
+
+            return result;
+        }
+    </script>
+</body>
+</html>
