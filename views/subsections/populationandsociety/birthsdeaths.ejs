@@ -1,0 +1,53 @@
+<div class="wrapper">
+    <div class="col-wrap">
+       <div class="col">
+            <div class="col col--md-47 col--lg-48">
+                <h1 class="page-neutral-intro__title margin-top--1">
+                    Population Dynamics (births/deaths)
+                </h1>
+                <p class="page-neutral-intro__content">
+                    Key statistics pertaining to birth (annual births, median age of mothers, birth and fertility rates, termination of pregnancies) and death (annual mortality data, median age of death, death rates, premature death statistics, and premature death rates) data. These metrics offer valuable insights into the health and demographics of Jersey's population, aiding in healthcare planning and policy development.
+                </p>
+                <p class="margin-bottom--3">
+                   <strong>Jump to:</strong>
+                   <a href="#births">Birth Statistics</a> |
+                   <a href="#deaths">Death Statistics</a>
+                </p>
+            </div>
+       </div>
+    </div>
+ </div>
+ 
+ <h2 id="births" class="tiles__title-h2">Births and Fertility</h2>
+ <iframe 
+ class="responsive-iframe-first1" frameBorder="0" src="https://stats.je/api/populationandsociety/births">
+ </iframe>
+
+ <h2 id="deaths" class="tiles__title-h2">Total Mortality & Median Age</h2>
+ <iframe 
+ class="responsive-iframe-first2" frameBorder="0" src="https://stats.je/api/populationandsociety/deaths">
+ </iframe>
+
+ Additional life expectancy data can be found under: <a href="/healthandgov/lifeexpectancy">https://www.stats.je/healthandgov/lifeexpectancy</a>
+
+ <style>
+   .responsive-iframe-first1 {
+     width: 100%;
+     height: 1100px; /* Set your preferred default height for the first iframe */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-first1 {
+       height: 650px; /* Adjust the height for smaller screens for the first iframe */
+     }
+    }
+
+    .responsive-iframe-first2 {
+     width: 100%;
+     height: 1200px; /* Set your preferred default height for the first iframe */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-first2 {
+       height: 650px; /* Adjust the height for smaller screens for the first iframe */
+     }
+    }
+ </style>

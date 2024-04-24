@@ -1,0 +1,58 @@
+<div class="wrapper">
+    <div class="col-wrap">
+       <div class="col">
+          <div class="col col--md-47 col--lg-48">
+             <h1 class="page-neutral-intro__title margin-top--1">
+                Employment Statistics
+             </h1>
+             <p class="page-neutral-intro__content margin-bottom--3">
+               Employment data in Jersey, revealing the total number of individuals in the workforce each year (by total and sector). Typically reported on a monthly basis.
+            </p>
+            <p>
+               <strong>Jump to:</strong>
+               <a href="#Employment">Total Unemployed</a> |
+               <a href="#Employment2">Annual Employment Change (%)</a> |
+               <a href="#Employment3">Public / Private Employment</a>
+            </p>                
+            </div>
+       </div>
+    </div>
+ </div>
+
+ <h2 id="Employment" class="tiles__title-h2">Total Unemployed</h2>
+ <iframe 
+ class="responsive-iframe-big" frameBorder="0" src="https://stats.je/api/employmentandhousing/unemployment">
+ </iframe>
+ 
+ <h2 id="Employment2" class="tiles__title-h2">Annual Employment Change (%)</h2>
+ <iframe 
+ class="responsive-iframe-small" frameBorder="0" src="https://stats.je/api/employmentandhousing/employmentchange">
+ </iframe>
+
+ <h2 id="Employment3" class="tiles__title-h2">Public / Private Employment</h2>
+ <iframe 
+ class="responsive-iframe-small" frameBorder="0" src="https://stats.je/api/employmentandhousing/employment">
+ </iframe>
+
+ <style>
+   .responsive-iframe-small {
+     width: 100%;
+     height: 500px; /* Set your preferred default height for the first iframe */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-small {
+       height: 250px; /* Adjust the height for smaller screens for the first iframe */
+     }
+    }
+
+    .responsive-iframe-big {
+     width: 100%;
+     height: 1700px; /* Set your preferred default height for the first iframe */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-big {
+       height: 650px; /* Adjust the height for smaller screens for the first iframe */
+     }
+    }
+ </style>
+

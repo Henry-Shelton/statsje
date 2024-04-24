@@ -1,0 +1,266 @@
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TPX1RN22P5"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+ 
+    gtag('config', 'G-TPX1RN22P5');
+    </script>
+ </head>
+ 
+ <!-- MAIN BODY -->  
+ <section>
+     <div class="wrapper">
+  
+        <ul class="list--neutral margin-top--half">
+ 
+ 
+          <h1 id="title-type" class="tiles__title-h2">Health Related Data</h1>
+  
+ 
+          <!-- HEALTH STATS -->  
+          <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/healthandgov/health" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/healthandgov/health">General Health Statistics</a>
+                  </h3>
+                  <p class="flush">
+                      Data on adult obesity (adult obesity rate [AOR]), childhood obesity, long-term illness trends, self-health ratings, and registered health conditions in Jersey, providing insights into the island's health trends and challenges.
+                   </p>
+               </div>
+            </div>
+            <div class="col col--md-15 col--lg-14">
+               <div style="height:96px;">
+                  <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/healthandgov/health">
+                     <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/healthandgov/obesitySL"></iframe>
+                  </div>
+               </div>
+            </div>
+            <div class="col col--md-13 col--lg-18">
+               <div class="tiles__content">
+   
+                  <span class="tiles__preunit tiles__preunit--list"></span>
+                  <span class="tiles__figure tiles__figure--list" id="obesityValueDiv"></span>
+                  <span class="tiles__unit tiles__unit--list">% (AOR)</span>
+                  <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt><dd class="flush">2021</dd>
+                     <dt class="tiles__dt">Next release:</dt><dd class="flush">2022</dd>
+                  </dl>
+                  <script>
+                      window.addEventListener('message', function (event) {
+                          if (event.origin === 'https://stats.je') {
+                              var obesityValue = event.data.obesityValue;
+                  
+                              if (obesityValue !== undefined) {
+                                  var obesityValueDiv = document.getElementById('obesityValueDiv');
+                                  obesityValueDiv.textContent = obesityValue;
+                              }
+                          }
+                      }, false);
+                  </script>
+   
+                  </div>
+               </div>
+            </li>
+
+
+
+         <!-- BEHAVIOURAL HEALTH TRENDS -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/healthandgov/behaviouralhealthtrends" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/healthandgov/behaviouralhealthtrends">Behavioural Health Trends: Anually updated</a>
+                  </h3>
+                  <p class="flush">
+                     The Health Behaviors Dataset offers essential data on smoking prevalence (non-smokers [NS]), hazardous drinking, physical activity, and healthy eating habits. It's a valuable resource for public health research and policy development.
+                  </p>
+               </div>
+            </div>
+            <div class="col col--md-15 col--lg-14">
+               <div style="height:96px;">
+                  <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/healthandgov/behaviouralhealthtrends">
+                     <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/healthandgov/behaviouralhealthtrendsSL"></iframe>
+                  </div>
+               </div>
+            </div>
+            <div class="col col--md-13 col--lg-18">
+               <div class="tiles__content">
+   
+                  <span class="tiles__preunit tiles__preunit--list"></span>
+                  <span class="tiles__figure tiles__figure--list" id="dontsmokeValueDiv"></span>
+                  <span class="tiles__unit tiles__unit--list">% (NS)</span>
+                  <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt><dd class="flush">2021</dd>
+                     <dt class="tiles__dt">Next release:</dt><dd class="flush">2022</dd>
+                  </dl>
+                  <script>
+                     window.addEventListener('message', function (event) {
+                         if (event.origin === 'https://stats.je') {
+                             var dontsmokeValue = event.data.dontsmokeValue;
+                 
+                             if (dontsmokeValue !== undefined) {
+                                 var dontsmokeValueDiv = document.getElementById('dontsmokeValueDiv');
+                                 dontsmokeValueDiv.textContent = dontsmokeValue;
+                             }
+                         }
+                     }, false);
+                 </script>
+   
+                  </div>
+               </div>
+            </li>
+
+
+
+         <!-- LIFE EXPECTANCY -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/healthandgov/lifeexpectancy" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/healthandgov/lifeexpectancy">Life Expectancy: Anually updated</a>
+                  </h3>
+                  <p class="flush">
+                     The data includes life expectancy (LE) figures for males and females at birth and age 65, without specifying the actual values. It helps assess lifespan and healthy lifespan for different demographic groups.
+                  </p>
+               </div>
+            </div>
+            <div class="col col--md-15 col--lg-14">
+               <div style="height:96px;">
+                  <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/healthandgov/lifeexpectancy">
+                     <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/healthandgov/lifeexpectancySL"></iframe>
+                  </div>
+               </div>
+            </div>
+            <div class="col col--md-13 col--lg-18">
+               <div class="tiles__content">
+   
+                  <span class="tiles__preunit tiles__preunit--list"></span>
+                  <span class="tiles__figure tiles__figure--list" id="leValueDiv"></span>
+                  <span class="tiles__unit tiles__unit--list"> years</span>
+                  <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt><dd class="flush">2021</dd>
+                     <dt class="tiles__dt">Next release:</dt><dd class="flush">2022</dd>
+                  </dl>
+                  <script>
+                     window.addEventListener('message', function (event) {
+                         if (event.origin === 'https://stats.je') {
+                             var leValue = event.data.leValue;
+                 
+                             if (leValue !== undefined) {
+                                 var leValueDiv = document.getElementById('leValueDiv');
+                                 leValueDiv.textContent = leValue;
+                             }
+                         }
+                     }, false);
+                 </script>
+   
+                  </div>
+               </div>
+            </li>
+
+
+
+         <!-- IMMUNISATION -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/healthandgov/immunisation" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/healthandgov/immunisation">Immunisation Data: Anually updated</a>
+                  </h3>
+                  <p class="flush">
+                     The Jersey Immunisation Dataset provides annual vaccination rates for 12, 24, and 60 months, teenagers, adults, and flu. It is a valuable resource for pinpointing coverage gaps, aiding in targeted public health improvements.
+                                    </p>
+               </div>
+            </div>
+            <div class="col col--md-15 col--lg-14">
+               <div style="height:96px;">
+                  <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/healthandgov/immunisation">
+                     <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/healthandgov/fluSL"></iframe>
+                  </div>
+               </div>
+            </div>
+            <div class="col col--md-13 col--lg-18">
+               <div class="tiles__content">
+   
+                  <span class="tiles__preunit tiles__preunit--list"></span>
+                  <span class="tiles__figure tiles__figure--list" id="fluValueDiv"></span>
+                  <span class="tiles__unit tiles__unit--list">% (65+)</span>
+                  <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt><dd class="flush">2021</dd>
+                     <dt class="tiles__dt">Next release:</dt><dd class="flush">2022</dd>
+                  </dl>
+                  <script>
+                     window.addEventListener('message', function (event) {
+                         if (event.origin === 'https://stats.je') {
+                             var fluValue = event.data.fluValue;
+                 
+                             if (fluValue !== undefined) {
+                                 var leValueDiv = document.getElementById('fluValueDiv');
+                                 fluValueDiv.textContent = fluValue;
+                             }
+                         }
+                     }, false);
+                 </script>
+   
+                  </div>
+               </div>
+            </li>
+
+
+
+            <h1 id="title-type" class="tiles__title-h2">Jersey Gov Reports and Survey Data</h1>
+
+
+         <!-- GOV REPORTS + SURVEYS -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/healthandgov/govreports" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/healthandgov/govreports"> Reports and Surveys </a>
+                  </h3>
+                  <p class="flush">
+                      Jersey Government data ranging from gov support schemes and culture statistics to emergency serices and weather data.
+                   </p>
+               </div>
+            </div>
+         </li>
+
+            
+         </ul>
+         <a class="underline-link" href="#main">Back to top</a>
+      </div>
+   </section>
+
+
+   <script>
+      const hoverItems = document.querySelectorAll('.js-hover-click');
+  
+      hoverItems.forEach(item => {
+          item.addEventListener('mouseenter', () => {
+              item.style.backgroundColor = '#c2c2c2';
+          });
+  
+          item.addEventListener('mouseleave', () => {
+              item.style.backgroundColor = '';
+          });
+  
+          item.addEventListener('click', () => {
+              const link = item.getAttribute('data-link');
+              if (link) {
+                  redirectToLink(link);
+              }
+          });
+      });
+  
+      function redirectToLink(url) {
+          window.location.href = url;
+      }
+  </script>
+  
+
+  </body>
+  </html>

@@ -1,0 +1,700 @@
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TPX1RN22P5"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TPX1RN22P5');
+  </script>
+</head>
+
+<h1 style="text-align: center; font-size: 30px; margin-bottom: 0;">Economic Calendar</h1>
+<h2 id="weekInfo" style="margin: 0; text-align: center;"></h2>
+
+
+
+<h3 style="margin-bottom: 1em; margin-top: 2em; text-align: center;">Upcoming Events</h3>
+
+
+<div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0px;">
+  <div>
+    <strong>Current Datetime: </strong><span id="currentDate"></span> | <span id="currentTime"></span> (GMT)
+  </div>
+  <div style="color: rgb(112, 112, 112); font-size: 12px;">
+      All data is streamed and updated automatically.
+  </div>
+</div>
+
+<div style="overflow-x: auto;">
+<table style="border-collapse: collapse; width: 100%; border: 1px solid #dddddd;">
+  <thead>
+    <tr style="background-color: #d81c1c;">
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Country</th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;"></th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Date</th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Time</th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Event</th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Impact</th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Forecast</th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Previous</th>      
+    </tr>
+  </thead>
+  <tbody id="publicationTableBody">
+    <!-- Data will be dynamically inserted here -->
+  </tbody>
+</table>
+</div>
+
+
+<script>
+// Fetch JSON data from the external file
+const localDataPromise = fetch('/json/calendar.json')
+  .then(response => response.json());
+
+// Fetch data from the API
+const apiDataPromise = fetch('https://stats.je/proxy?targetUrl=https://nfs.faireconomy.media/ff_calendar_thisweek.json?version=3362d341a264b673f8605b13d740aaf1')
+  .then(response => response.json());
+
+// Wait for both promises to resolve
+Promise.all([localDataPromise, apiDataPromise])
+  .then(([localData, apiData]) => {
+    // Get the current date
+    var currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for accurate comparison
+
+    // Calculate the end date for the next week
+    var endDate = new Date(currentDate);
+    endDate.setDate(currentDate.getDate() + 14);
+
+    // Combine data from both sources into a single array
+    const combinedData = [...localData.StatisticalPublications, ...apiData];
+
+    // Filter the combined data for the next week and GBP or JE country
+    const filteredData = combinedData.filter(publication => {
+      const publicationDate = new Date(publication.Publicationdate || publication.date);
+      publicationDate.setHours(0, 0, 0, 0);
+      const isGBPorJE = (
+        (publication.Country && (publication.Country.toUpperCase() === 'GBP' || publication.Country.toUpperCase() === 'JE')) ||
+        (publication.country && (publication.country.toUpperCase() === 'GBP' || publication.country.toUpperCase() === 'JE'))
+      );
+      return publicationDate >= currentDate && publicationDate < endDate && isGBPorJE;
+    });
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .low-impact {
+        background-color: rgba(0, 255, 0, 0.2);
+      }
+      .medium-impact {
+        background-color: rgba(255, 255, 0, 0.2);
+      }
+      .high-impact {
+        background-color: rgba(255, 0, 0, 0.2);
+      }
+      .holiday {
+        background-color: #ccc;
+        color: #000;
+      }
+    `;
+    document.head.appendChild(style);
+
+
+    // Sort the filtered data by date in descending order
+    filteredData.sort((a, b) => new Date(b.Publicationdate || b.date) - new Date(a.Publicationdate || a.date));
+
+    // Get the table body element
+    var tableBody = document.getElementById("publicationTableBody");
+
+    // Clear existing table content
+    tableBody.innerHTML = '';
+
+    // Initialize a variable to keep track of the current day
+    var currentDay = null;
+
+    for (let i = filteredData.length - 1; i >= 0; i--) {
+      const publication = filteredData[i];
+
+      // Check if the current row corresponds to a new day
+      var publicationDate = new Date(publication.Publicationdate || publication.date);
+      publicationDate.setHours(0, 0, 0, 0);
+
+      if (publicationDate.getTime() !== currentDay) {
+        currentDay = publicationDate.getTime();
+
+        // Insert a gray separator row for each day
+        var separatorRow = tableBody.insertRow(); // By default, insert at the end
+        separatorRow.style.backgroundColor = '#f8f4f4';
+        separatorRow.innerHTML = `<td colspan="8" style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-weight: bold;">${publicationDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>`;
+      }
+
+      var row = tableBody.insertRow(); // By default, insert at the end
+
+      // Additional column for Country
+      var cellCountry = row.insertCell(0);
+      cellCountry.style.border = "1px solid #dddddd";
+      cellCountry.style.textAlign = "left";
+      cellCountry.style.padding = "8px";
+
+      var countryValue = (
+        (publication.Country && publication.Country.toUpperCase() === 'GBP') ? 'UK' :
+        (publication.country && publication.country.toUpperCase() === 'GBP') ? 'UK' :
+        (publication.country && publication.country.toUpperCase() === 'JE') ? 'JE' :
+        publication.Country || publication.country || 'Unknown'
+      );
+
+      cellCountry.textContent = countryValue;
+
+    // Add a new column for the Flag
+    var cellFlag = row.insertCell(1);
+    cellFlag.style.border = "1px solid #dddddd";
+    cellFlag.style.textAlign = "center"; // Center the content horizontally
+    cellFlag.style.padding = "8px";
+
+    // Set the flag image based on the country code
+    if (countryValue.toUpperCase() === 'JE') {
+      cellFlag.innerHTML = '<img src="/assets/img/jersey.png" alt="JE Flag" style="max-width: 30px; max-height: 20px; display: block; margin: auto;">';
+    }
+
+    // Set the flag image based on the country code
+    if (countryValue.toUpperCase() === 'UK') {
+      cellFlag.innerHTML = '<img src="/assets/img/uk.png" alt="UK Flag" style="max-width: 30px; max-height: 20px; display: block; margin: auto;">';
+    }
+
+
+      // Continue with the rest of the columns
+      var cell1 = row.insertCell(2);
+      cell1.style.border = "1px solid #dddddd";
+      cell1.style.textAlign = "left";
+      cell1.style.padding = "8px";
+      cell1.textContent = publication.Publicationdate || formatDate(new Date(publication.date));
+
+
+      var cell2 = row.insertCell(3);
+      cell2.style.border = "1px solid #dddddd";
+      cell2.style.textAlign = "left";
+      cell2.style.padding = "8px";
+      cell2.textContent = publication.Publicationtime || formatTime(new Date(publication.date));
+
+      var cell3 = row.insertCell(4);
+      cell3.style.border = "1px solid #dddddd";
+      cell3.style.textAlign = "left";
+      cell3.style.padding = "8px";
+      cell3.textContent = publication.Publicationtopic || publication.title;
+
+      // Actual values replacing empty columns
+      var cellImpact = row.insertCell(5);
+      cellImpact.style.border = "1px solid #dddddd";
+      cellImpact.style.textAlign = "left";
+      cellImpact.style.padding = "8px";
+      cellImpact.textContent = publication.Impact || publication.impact;
+
+        // Add class based on the Impact value
+        var impactClass = "";
+        if (cellImpact.textContent.toLowerCase() === "low") {
+          impactClass = "low-impact";
+        } else if (cellImpact.textContent.toLowerCase() === "medium") {
+          impactClass = "medium-impact";
+        } else if (cellImpact.textContent.toLowerCase() === "high") {
+          impactClass = "high-impact";
+        } else if (cellImpact.textContent.toLowerCase() === "holiday") {
+          impactClass = "holiday";
+        }
+        
+        // Check if the impactClass is not empty before adding it
+        if (impactClass) {
+          cellImpact.classList.add(impactClass);
+        } else {
+          console.warn("Impact class is empty or undefined.");
+        }
+
+
+      var cellForecast = row.insertCell(6);
+      cellForecast.style.border = "1px solid #dddddd";
+      cellForecast.style.textAlign = "left";
+      cellForecast.style.padding = "8px";
+      cellForecast.textContent = publication.Forecast || publication.forecast;
+
+      var cellPrevious = row.insertCell(7);
+      cellPrevious.style.border = "1px solid #dddddd";
+      cellPrevious.style.textAlign = "left";
+      cellPrevious.style.padding = "8px";
+      cellPrevious.style.fontWeight = "bold";
+      cellPrevious.textContent = publication.Previous || publication.previous;
+    }
+  })
+  .catch(error => console.error('Error fetching data:', error));
+
+// Function to format date as YYYY-MM-DD
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+// Function to format time without seconds
+function formatTime(date) {
+  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+}
+
+// TIME 
+// Function to update the current time
+function updateCurrentTime() {
+  const currentTimeElement = document.getElementById('currentTime');
+  if (currentTimeElement) {
+    const currentTime = new Date();
+    const formattedTime = currentTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
+    currentTimeElement.textContent = formattedTime;
+  }
+}
+
+// Update the current time initially
+updateCurrentTime();
+
+// Update the current time every minute (60,000 milliseconds)
+setInterval(updateCurrentTime, 60000);
+
+
+  // DATE 
+  // Function to update the current date
+  function updateCurrentDate() {
+    const currentDateElement = document.getElementById('currentDate');
+    if (currentDateElement) {
+      const currentDate = new Date();
+      const formattedDate = formatDate(currentDate);
+      currentDateElement.textContent = formattedDate;
+    }
+  }
+
+  // Update the current date initially
+  updateCurrentDate();
+
+  // Update the current date every day (86,400,000 milliseconds)
+  setInterval(updateCurrentDate, 86400000);
+
+</script>
+
+
+
+<script>
+  // Store the original date format
+  const originalDateFormat = 'DD/MM/YYYY';
+
+  function updateCurrentTimeAndWeekInfo() {
+    const currentTimeElement = document.getElementById('currentTime');
+    const weekInfoElement = document.getElementById('weekInfo');
+
+    if (currentTimeElement && weekInfoElement) {
+      const currentTime = new Date();
+      const formattedTime = currentTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
+
+      const startOfWeek = new Date(currentTime);
+      startOfWeek.setDate(currentTime.getDate() - currentTime.getDay()); // Set the week start to Monday
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+      const currentWeek = getWeekNumber(currentTime)-1;
+      const startDate = formatDate(startOfWeek);
+      const endDate = formatDate(endOfWeek);
+
+      weekInfoElement.innerHTML += `Week ${currentWeek}: (${startDate} - ${endDate})`;
+
+      currentTimeElement.textContent = formattedTime;
+    }
+  }
+
+  // Update the current time and week information initially
+  updateCurrentTimeAndWeekInfo();
+
+  // Update the current time and week information every minute (60,000 milliseconds)
+  setInterval(updateCurrentTimeAndWeekInfo, 300000);
+
+  // Function to get the ISO week number of a date
+  function getWeekNumber(date) {
+    const target = new Date(date.valueOf());
+    target.setDate(target.getDate() - ((date.getDay() + 6) % 7) + 1); // Set the week start to Monday
+    const firstThursday = new Date(target.getFullYear(), 0, 4);
+    firstThursday.setDate(firstThursday.getDate() - ((firstThursday.getDay() + 6) % 7) + 1); // Set the week start to Monday
+    return 1 + Math.ceil((target - firstThursday) / 604800000); // 604800000 = 7 * 24 * 3600 * 1000
+  }
+
+  // Function to format date using the stored format
+  function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="weekInfo" style="margin-bottom: 1em; margin-top: 2em; text-align: center;">Recent Events</h3>
+
+  <div style="overflow-x: auto;">
+
+  <table style="border-collapse: collapse; width: 100%; border: 1px solid #dddddd;">
+    <thead>
+      <tr style="background-color: #d81c1c;">
+        <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Country</th>
+        <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;"></th>
+        <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Date</th>
+        <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Time</th>
+        <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Event</th>
+        <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Impact</th>
+        <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Forecast</th>
+        <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Previous</th>      
+      </tr>
+    </thead>
+    <tbody id="publicationTableBody2">
+      <!-- Data will be dynamically inserted here -->
+    </tbody>
+  </table>
+
+  </div>
+  
+  
+  <script>
+  // Fetch JSON data from the external file
+  const localDataPromise2 = fetch('/json/calendar.json')
+    .then(response => response.json());
+  
+  // Fetch data from the API
+  const apiDataPromise2 = fetch('https://stats.je/proxy?targetUrl=https://nfs.faireconomy.media/ff_calendar_thisweek.json?version=3362d341a264b673f8605b13d740aaf1')
+    .then(response => response.json());
+  
+  // Wait for both promises to resolve
+  Promise.all([localDataPromise2, apiDataPromise2])
+    .then(([localData, apiData]) => {
+      // Get the current date
+      var currentDate = new Date();
+          currentDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for accurate comparison
+  
+          // Calculate the start date for the current week
+          var startDate = new Date(currentDate);
+          startDate.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1)); // Adjust for Sunday
+  
+          // Combine data from both sources into a single array
+          const combinedData = [...localData.StatisticalPublications, ...apiData];
+  
+          // Filter the combined data for events before today in the current week and GBP or JE country
+          const filteredData = combinedData.filter(publication => {
+              const publicationDate = new Date(publication.Publicationdate || publication.date);
+              publicationDate.setHours(0, 0, 0, 0);
+              const isGBPorJE = (
+                  (publication.Country && (publication.Country.toUpperCase() === 'GBP' || publication.Country.toUpperCase() === 'JE')) ||
+                  (publication.country && (publication.country.toUpperCase() === 'GBP' || publication.country.toUpperCase() === 'JE'))
+              );
+              return publicationDate < currentDate && publicationDate >= startDate && isGBPorJE;
+          });
+          
+  
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .low-impact {
+          background-color: rgba(0, 255, 0, 0.2);
+        }
+        .medium-impact {
+          background-color: rgba(255, 255, 0, 0.2);
+        }
+        .high-impact {
+          background-color: rgba(255, 0, 0, 0.2);
+        }
+        .holiday {
+          background-color: #ccc;
+          color: #000;
+        }
+      `;
+      document.head.appendChild(style);
+  
+  
+      // Sort the filtered data by date in descending order
+      filteredData.sort((a, b) => new Date(b.Publicationdate || b.date) - new Date(a.Publicationdate || a.date));
+
+      // Get the table body element
+      var tableBody = document.getElementById("publicationTableBody2");
+
+      // Clear existing table content
+      tableBody.innerHTML = '';
+
+      // Initialize a variable to keep track of the current day
+      var currentDay = null;
+
+      for (let i = filteredData.length - 1; i >= 0; i--) {
+        const publication = filteredData[i];
+  
+        // Check if the current row corresponds to a new day
+        var publicationDate = new Date(publication.Publicationdate || publication.date);
+        publicationDate.setHours(0, 0, 0, 0);
+  
+        if (publicationDate.getTime() !== currentDay) {
+          currentDay = publicationDate.getTime();
+  
+          // Insert a gray separator row for each day
+          var separatorRow = tableBody.insertRow(); // By default, insert at the end
+          separatorRow.style.backgroundColor = '#f8f4f4';
+          separatorRow.innerHTML = `<td colspan="8" style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-weight: bold;">${publicationDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>`;
+        }
+  
+        var row = tableBody.insertRow(); // By default, insert at the end
+  
+        // Additional column for Country
+        var cellCountry = row.insertCell(0);
+        cellCountry.style.border = "1px solid #dddddd";
+        cellCountry.style.textAlign = "left";
+        cellCountry.style.padding = "8px";
+  
+        var countryValue = (
+          (publication.Country && publication.Country.toUpperCase() === 'GBP') ? 'UK' :
+          (publication.country && publication.country.toUpperCase() === 'GBP') ? 'UK' :
+          (publication.country && publication.country.toUpperCase() === 'JE') ? 'JE' :
+          publication.Country || publication.country || 'Unknown'
+        );
+  
+        cellCountry.textContent = countryValue;
+  
+      // Add a new column for the Flag
+      var cellFlag = row.insertCell(1);
+      cellFlag.style.border = "1px solid #dddddd";
+      cellFlag.style.textAlign = "center"; // Center the content horizontally
+      cellFlag.style.padding = "8px";
+  
+      // Set the flag image based on the country code
+      if (countryValue.toUpperCase() === 'JE') {
+        cellFlag.innerHTML = '<img src="/assets/img/jersey.png" alt="JE Flag" style="max-width: 30px; max-height: 20px; display: block; margin: auto;">';
+      }
+  
+      // Set the flag image based on the country code
+      if (countryValue.toUpperCase() === 'UK') {
+        cellFlag.innerHTML = '<img src="/assets/img/uk.png" alt="UK Flag" style="max-width: 30px; max-height: 20px; display: block; margin: auto;">';
+      }
+  
+  
+        // Continue with the rest of the columns
+        var cell1 = row.insertCell(2);
+        cell1.style.border = "1px solid #dddddd";
+        cell1.style.textAlign = "left";
+        cell1.style.padding = "8px";
+        cell1.textContent = publication.Publicationdate || formatDate(new Date(publication.date));
+  
+  
+        var cell2 = row.insertCell(3);
+        cell2.style.border = "1px solid #dddddd";
+        cell2.style.textAlign = "left";
+        cell2.style.padding = "8px";
+        cell2.textContent = publication.Publicationtime || formatTime(new Date(publication.date));
+  
+        var cell3 = row.insertCell(4);
+        cell3.style.border = "1px solid #dddddd";
+        cell3.style.textAlign = "left";
+        cell3.style.padding = "8px";
+        cell3.textContent = publication.Publicationtopic || publication.title;
+  
+        // Actual values replacing empty columns
+        var cellImpact = row.insertCell(5);
+        cellImpact.style.border = "1px solid #dddddd";
+        cellImpact.style.textAlign = "left";
+        cellImpact.style.padding = "8px";
+        cellImpact.textContent = publication.Impact || publication.impact;
+  
+  
+        // Add class based on the Impact value
+        var impactClass = "";
+        if (cellImpact.textContent.toLowerCase() === "low") {
+          impactClass = "low-impact";
+        } else if (cellImpact.textContent.toLowerCase() === "medium") {
+          impactClass = "medium-impact";
+        } else if (cellImpact.textContent.toLowerCase() === "high") {
+          impactClass = "high-impact";
+        } else if (cellImpact.textContent.toLowerCase() === "holiday") {
+          impactClass = "holiday";
+        }
+        
+        // Check if the impactClass is not empty before adding it
+        if (impactClass) {
+          cellImpact.classList.add(impactClass);
+        } else {
+          console.warn("Impact class is empty or undefined.");
+        }
+  
+        var cellForecast = row.insertCell(6);
+        cellForecast.style.border = "1px solid #dddddd";
+        cellForecast.style.textAlign = "left";
+        cellForecast.style.padding = "8px";
+        cellForecast.textContent = publication.Forecast || publication.forecast;
+  
+        var cellPrevious = row.insertCell(7);
+        cellPrevious.style.border = "1px solid #dddddd";
+        cellPrevious.style.textAlign = "left";
+        cellPrevious.style.padding = "8px";
+        cellPrevious.style.fontWeight = "bold";
+        cellPrevious.textContent = publication.Previous || publication.previous;
+      }
+    })
+    .catch(error => console.error('Error fetching data:', error));
+  
+    
+  // Function to format date as YYYY-MM-DD
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  
+  // Function to format time without seconds
+  function formatTime(date) {
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+  }
+    
+    // Function to get the ISO week number of a date
+    function getWeekNumber(date) {
+      const target = new Date(date.valueOf());
+      const dayNr = (date.getDay() + 6) % 7;
+      target.setDate(target.getDate() - dayNr + 3);
+      const firstThursday = target.valueOf();
+      target.setMonth(0, 1);
+      if (target.getDay() !== 4) {
+        target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
+      }
+      return 1 + Math.ceil((firstThursday - target) / 604800000); // 604800000 = 7 * 24 * 3600 * 1000
+    }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="weekInfo" style="margin-bottom: 1em; margin-top: 2em; text-align: center;">Older Releases (Jersey Only)</h3>
+
+<table style="border-collapse: collapse; margin-bottom: 3em; width: 100%; border: 1px solid #dddddd;">
+  <thead>
+    <tr style="background-color: #d81c1c;">
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Country</th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;"></th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Date</th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Time</th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Event</th>
+      <th style="border: 1px solid #d81c1c; text-align: left; padding: 8px; color: white;">Description</th>
+    </tr>
+  </thead>
+  <tbody id="publicationTableBody1">
+    <!-- Data will be dynamically inserted here -->
+  </tbody>
+</table>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Fetch JSON data
+    fetch('/json/calendar.json')
+      .then(response => response.json())
+      .then(data => {
+        if (!data || !Array.isArray(data.StatisticalPublications)) {
+          console.error('Invalid JSON format. Expected an array under "StatisticalPublications".');
+          return;
+        }
+
+        // Get today's date in the format "YYYY-MM-DD"
+        var today = new Date().toISOString().split('T')[0];
+
+        // Filter data to find the last 10 publications before today
+        var lastPublications = data.StatisticalPublications
+          .filter(entry => entry.Publicationdate < today)
+          .sort((a, b) => (b.Publicationdate > a.Publicationdate) ? 1 : -1)
+          .slice(0, 10);
+
+        // Get the table body element
+        var tableBody = document.getElementById('publicationTableBody1');
+
+        // Populate the table with the last 10 publications
+        lastPublications.forEach(entry => {
+          var row = tableBody.insertRow();
+
+          // Create cells and populate them with data
+          var countryCell = row.insertCell(0);
+          countryCell.style.border = "1px solid #dddddd";
+          countryCell.style.textAlign = "left";
+          countryCell.style.padding = "8px";
+          countryCell.textContent = entry.Country;
+
+          var flagCell = row.insertCell(1);
+          flagCell.style.border = "1px solid #dddddd";
+          flagCell.style.textAlign = "center"; // Center the content horizontally
+          flagCell.style.padding = "8px";
+          if (entry.Country.toUpperCase() === 'JE') {
+            flagCell.innerHTML = '<img src="/assets/img/jersey.png" alt="JE Flag" style="max-width: 30px; max-height: 20px; display: block; margin: auto;">';
+          }
+
+          var dateCell = row.insertCell(2);
+          dateCell.style.border = "1px solid #dddddd";
+          dateCell.style.textAlign = "left";
+          dateCell.style.padding = "8px";
+          dateCell.textContent = new Date(entry.Publicationdate).toLocaleDateString('en-US');
+
+          var timeCell = row.insertCell(3);
+          timeCell.style.border = "1px solid #dddddd";
+          timeCell.style.textAlign = "left";
+          timeCell.style.padding = "8px";
+          timeCell.textContent = new Date(entry.Publicationdate + ' ' + entry.Publicationtime).toLocaleTimeString('en-US', { timeStyle: 'short' });
+
+          var topicCell = row.insertCell(4);
+          topicCell.style.border = "1px solid #dddddd";
+          topicCell.style.textAlign = "left";
+          topicCell.style.padding = "8px";
+          topicCell.style.fontWeight = "bold";
+          topicCell.textContent = entry.Publicationtopic;
+
+          var eventCell = row.insertCell(5);
+          eventCell.style.border = "1px solid #dddddd";
+          eventCell.style.textAlign = "left";
+          eventCell.style.padding = "8px";
+          eventCell.textContent = entry.Publicationname;
+        });
+      })
+      .catch(error => console.error('Error fetching JSON:', error));
+  });
+</script>
+
+<div style="margin-top: 10px !important";>
+  Additional information about the releases of these statistical publications is available on the 
+  <a class="underline-link" href="https://www.gov.je/StatisticsPerformance/AboutStatistics/pages/statisticalpublications.aspx"><strong>gov.je website</strong></a>
+</div>

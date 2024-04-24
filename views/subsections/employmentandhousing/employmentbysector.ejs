@@ -1,0 +1,53 @@
+<div class="wrapper">
+    <div class="col-wrap">
+       <div class="col">
+          <div class="col col--md-47 col--lg-48">
+             <h1 class="page-neutral-intro__title margin-top--1">
+                Employment by Sector
+             </h1>
+                <p class="page-neutral-intro__content margin-bottom--3"> 
+                    Insights into the workforce composition, showing the annual count of individuals employed, categorized by specific industry sectors.
+                </p> 
+                <p class="margin-bottom--3">
+                  <strong>Jump to:</strong>
+                  <a href="#Employment">Industry Compositions of Total Employment</a> |
+                  <a href="#Employment2">Primary Sector Employment Trends</a> |
+                  <a href="#Employment3">Secondary Sector Employment Trends</a> |
+                  <a href="#Employment4">Tertiary Sector Employment Trends</a> 
+               </p>         
+            </div>
+       </div>
+    </div>
+ </div>
+ 
+ <h2 id="Employment" class="tiles__title-h2">Industry Compositions of Total Employment</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/employmentandhousing/employmentcomparison">
+ </iframe>
+
+ <h2 id="Employment2" class="tiles__title-h2">Primary Sector Employment Trends</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/employmentandhousing/employmentprimary">
+ </iframe>
+
+ <h2 id="Employment3" class="tiles__title-h2">Secondary Sector Employment Trends</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/employmentandhousing/employmentsecondary">
+ </iframe>
+
+ <h2 id="Employment4" class="tiles__title-h2">Tertiary Sector Employment Trends</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/employmentandhousing/employmenttertiary">
+ </iframe>
+
+ <style>
+   .responsive-iframe-first {
+     width: 100%;
+     height: 500px; /* Set your preferred default height for the first iframe */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-first {
+       height: 250px; /* Adjust the height for smaller screens for the first iframe */
+     }
+    }
+ </style>

@@ -1,0 +1,47 @@
+<div class="wrapper">
+   <div class="col-wrap">
+      <div class="col">
+           <div class="col col--md-47 col--lg-48">
+               <h1 class="page-neutral-intro__title margin-top--1">
+                   Population Statistics
+               </h1>
+               <p class="page-neutral-intro__content">
+                   Data including population estimates, annual change, net migration (from registered and licensed individuals), and natural growth, offering an in-depth view of the population's dynamics in Jersey.
+               </p>
+               <p class="margin-bottom--3">
+                  <strong>Jump to:</strong>
+                  <a href="#total-population">Total Population</a> |
+                  <a href="#annual-change">Annual Net Population Change</a> |
+                  <a href="#migration-change">Annual Net Migration Change by type</a>
+               </p>
+           </div>
+      </div>
+   </div>
+</div>
+
+<h2 id="total-population" class="tiles__title-h2">Total Population</h2>
+<iframe 
+class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/populationandsociety/populationandmigration">
+</iframe>
+
+<h2 id="annual-change" class="tiles__title-h2">Annual Net Population Change (absolute numbers)</h2>
+<iframe 
+class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/populationandsociety/populationchange">
+</iframe>
+
+<h2 id="migration-change" class="tiles__title-h2">Annual Net Migration Change by type (absolute numbers)</h2>
+<iframe 
+class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/populationandsociety/populationmigrationchange">
+</iframe>
+
+<style>
+   .responsive-iframe-first {
+     width: 100%;
+     height: 500px; /* Set your preferred default height for the first iframe */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-first {
+       height: 250px; /* Adjust the height for smaller screens for the first iframe */
+     }
+    }
+ </style>

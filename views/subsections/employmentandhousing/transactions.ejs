@@ -1,0 +1,86 @@
+<div class="wrapper">
+    <div class="col-wrap">
+       <div class="col">
+          <div class="col col--md-47 col--lg-48">
+             <h1 class="page-neutral-intro__title margin-top--1">
+                Property Transaction Data
+             </h1>
+             <p class="page-neutral-intro__content margin-bottom--3">
+                Comprehensive quarterly property transaction counts, encompassing all property types on the island. Offeering insights into the total transaction counts and property type breakdowns, enabling a better understanding of market trends and variations. 
+            </p>
+               <strong>Jump to:</strong>
+               <a href="#Transactions">Total Number of Property Transactions</a> |
+               <a href="#Transactions2">Property Transactions by type</a> |
+               <a href="#Transactions3">Property Transactions by parish</a>
+            </p>      
+            
+            </div>
+       </div>
+    </div>
+ </div>
+ 
+ <h2 id="Transactions" class="tiles__title-h2">Total Number of Property Transactions</h2>
+ <iframe 
+ class="responsive-iframe-CUSTOM" frameBorder="0" src="https://stats.je/api/employmentandhousing/transactions">
+ </iframe>
+
+ <p style="font-family: Arial, sans-serif; font-size: 18px; line-height: 1.5; padding-bottom: 1em;">
+  The property market in Jersey has experienced a significant downturn, as indicated by the latest turnover change data. 
+  In the most recent quarter, there was a substantial decline of 87 transactions, representing a staggering 35.95% decrease. 
+  The annual figures are equally concerning, with a year-over-year change of -253 transactions, reflecting a substantial 62.01% reduction. 
+  Taking a broader perspective, the 5-year change in property turnover on the island is even more pronounced, with a decrease of 287 transactions, marking a substantial 64.93% downturn. 
+</p>
+
+ <h2 id="Transactions2" class="tiles__title-h2">Total Number of Property Transactions by type</h2>
+ <iframe 
+ class="responsive-iframe-second-and-third" frameBorder="0" src="https://stats.je/api/employmentandhousing/transactionsbytype">
+ </iframe>
+
+ <p style="font-family: Arial, sans-serif; font-size: 18px; line-height: 1.5; padding-bottom: 1em;">
+  In the latest quarter, the Jersey property market faced substantial challenges across various property types. 
+  Notably, 1-bedroom flats and 2-bedroom flats experienced significant declines of -58.00% and -47.00%, respectively. 
+  2-bedroom houses showed a modest decrease of -5.00%, while 3-bedroom houses saw a positive change of 10.00%. 
+  Meanwhile, 4-bedroom houses had a slight increase of 7.00%. 
+</p>
+
+ <h2 id="Transactions3" class="tiles__title-h2">Total Number of Property Transactions by parish</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/employmentandhousing/transactionsbyparish">
+ </iframe>
+
+ <p style="font-family: Arial, sans-serif; font-size: 18px; line-height: 1.5; padding-bottom: 1em;">
+  Notable changes emerge: St Brelade experiences a substantial -74.47% decline, and St Mary undergoes a notable -92.31% decrease. 
+  Meanwhile, St Martin sees a noteworthy +26.19% increase, St Peter shows an extraordinary -210% change, and St Helier records a marginal -0.36% decrease.
+</p>
+
+ <style>
+   .responsive-iframe-first {
+     width: 100%;
+     height: 700px; /* Set your preferred default height for the first iframe */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-first {
+       height: 500px; /* Adjust the height for smaller screens for the first iframe */
+     }
+    }
+
+    .responsive-iframe-second-and-third {
+     width: 100%;
+     height: 1350px; /* Set your preferred default height for the second and third iframes */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-second-and-third {
+       height: 980px; /* Adjust the height for smaller screens for the second and third iframes */
+     }
+   }
+
+   .responsive-iframe-CUSTOM {
+     width: 100%;
+     height: 1270px; /* Set your preferred default height for the second and third iframes */
+   }
+   @media (max-width: 600px) {
+      .responsive-iframe-CUSTOM {
+       height: 850px; /* Adjust the height for smaller screens for the second and third iframes */
+     }
+   }
+ </style>

@@ -1,0 +1,314 @@
+<head>
+   <!-- Google tag (gtag.js) -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=G-TPX1RN22P5"></script>
+   <script>
+   window.dataLayer = window.dataLayer || [];
+   function gtag(){dataLayer.push(arguments);}
+   gtag('js', new Date());
+
+   gtag('config', 'G-TPX1RN22P5');
+   </script>
+</head>
+
+<!-- MAIN BODY -->  
+<section>
+    <div class="wrapper">
+ 
+       <ul class="list--neutral margin-top--half">
+
+
+         <h1 id="title-type" class="tiles__title-h2">Housing</h1>
+ 
+         <!-- HPI -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/employmentandhousing/hpi" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/employmentandhousing/hpi"> House Price Index (HPI): Quarterly updated </a>
+                  </h3>
+                  <p class="flush">
+                    HPI tracks changes in residential property prices on the island, providing valuable insights into the housing market's trends and fluctuations.
+                 </p>
+               </div>
+            </div>
+            <div class="col col--md-15 col--lg-14">
+               <div style="height:96px;">
+                  <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/employmentandhousing/hpi">
+                     <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/employmentandhousing/hpiSL"></iframe>
+                  </div>
+               </div>
+            </div>
+            <div class="col col--md-13 col--lg-18">
+               <div class="tiles__content">
+   
+                  <span class="tiles__preunit tiles__preunit--list" id="percentageDifference" style="margin-right: 10px;"></span>
+                  <span class="tiles__unit tiles__unit--list" id="SecondToLastHPIValue" style="display: none;"></span>
+                  <span class="tiles__figure tiles__figure--list">(<span id="HPIValue"></span>)</span>
+
+                  <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt><dd class="flush">Q3 2023</dd>
+                     <dt class="tiles__dt">Next release:</dt><dd class="flush">Q4 2023</dd>
+                  </dl>
+                  <script>
+                     window.addEventListener('message', function (event) {
+                       if (event.origin === 'https://stats.je') {
+                          var hpiValue = event.data.hpiValue;
+                          var secondtolasthpiValue = event.data.secondtolasthpiValue;
+                     
+                          if (hpiValue !== undefined) {
+                             var gvaValueSpan = document.getElementById('HPIValue');
+                             gvaValueSpan.textContent = hpiValue;
+                          }
+                     
+                          if (secondtolasthpiValue !== undefined) {
+                             var secondToLastHPIValueSpan = document.getElementById('SecondToLastHPIValue');
+                             secondToLastHPIValueSpan.textContent = secondtolasthpiValue;
+                          }
+                     
+                     const secondToLastHPIValue = parseFloat(document.getElementById("SecondToLastHPIValue").textContent);
+                     const HPIValue = parseFloat(document.getElementById("HPIValue").textContent);
+                     
+                     if (!isNaN(secondToLastHPIValue) && !isNaN(HPIValue)) {
+                        const difference = HPIValue - secondToLastHPIValue;
+                        const percentageDifference = (difference / secondToLastHPIValue) * 100;
+                        const percentageDifferenceElement = document.getElementById("percentageDifference");
+                        percentageDifferenceElement.textContent = `${percentageDifference.toFixed(1)}%`;
+                     
+                     } else {
+                        const percentageDifferenceElement = document.getElementById("percentageDifference");
+                        percentageDifferenceElement.textContent = "Invalid values";
+                        }
+                       }
+                     }, false);
+                  </script>
+   
+                  </div>
+               </div>
+            </li>
+            
+         
+  
+         <!-- AVERAGE HOUSE PRICE -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/employmentandhousing/averagehouseprice" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+              <div class="box__content">
+                 <h3 class="font-size--h4">
+                    <a class="underline-link" href="/employmentandhousing/averagehouseprice"> Average House Prices: Quarterly updated </a>
+                 </h3>
+                 <p class="flush">
+                    Average prices for various property types (1-bedroom flats, 2-bedroom flats, 2-bedroom houses, 3-bedroom houses, and 4-bedroom houses), offering insights into real estate pricing trends for assessing housing affordability and investments.
+                 </p>
+              </div>
+           </div>
+           <div class="col col--md-15 col--lg-14">
+              <div style="height:96px;">
+                 <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/employmentandhousing/averagehouseprice">
+                    <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/employmentandhousing/averagehousepriceSL"></iframe>
+                 </div>
+              </div>
+           </div>
+           <div class="col col--md-13 col--lg-18">
+              <div class="tiles__content">
+  
+                 <span class="tiles__preunit tiles__preunit--list">£</span>
+                 <span class="tiles__figure tiles__figure--list" id="">686,000</span>
+                 <span class="tiles__unit tiles__unit--list"></span>
+                 <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt><dd class="flush">Q3 2023</dd>
+                     <dt class="tiles__dt">Next release:</dt><dd class="flush">Q4 2023</dd>
+                 </dl>
+                 <script>
+                     window.addEventListener('message', function (event) {
+                         if (event.origin === 'https://stats.je') {
+                             var averahehousepriceValue = event.data.averahehousepriceValue;
+                 
+                             if (averahehousepriceValue !== undefined) {
+                                 var gvaValueSpan = document.getElementById('avghouseValue');
+                                 gvaValueSpan.textContent = averahehousepriceValue;
+                             }
+                         }
+                     }, false);
+                 </script>
+  
+                 </div>
+              </div>
+           </li>
+            
+  
+  
+        <!-- PROPERTY TRANSACTION DATA -->  
+        <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/employmentandhousing/transactions" style="cursor: pointer;">
+         <div class="col col--md-15 col--lg-27">
+              <div class="box__content">
+                 <h3 class="font-size--h4">
+                    <a class="underline-link" href="/employmentandhousing/transactions"> Property Transaction Data: Quarterly updated </a>
+                 </h3>
+                 <p class="flush">
+                    Quarterly Property Transaction Counts: Comprehensive Data from the Jersey House Price Index Covering All Types of Properties
+                 </p>
+              </div>
+           </div>
+           <div class="col col--md-15 col--lg-14">
+              <div style="height:96px;">
+                 <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/employmentandhousing/transactions">
+                    <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/employmentandhousing/transactionsSL"></iframe>
+                 </div>
+              </div>
+           </div>
+           <div class="col col--md-13 col--lg-18">
+              <div class="tiles__content">
+  
+                 <span class="tiles__preunit tiles__preunit--list"></span>
+                 <span class="tiles__figure tiles__figure--list" id="transactionsValue"></span>
+                 <span class="tiles__unit tiles__unit--list">(-35.95%)</span>
+                 <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt><dd class="flush">Q3 2023</dd>
+                     <dt class="tiles__dt">Next release:</dt><dd class="flush">Q4 2023</dd>
+                 </dl>
+                 <script>
+                     window.addEventListener('message', function (event) {
+                         if (event.origin === 'https://stats.je') {
+                             var transactionsValue = event.data.transactionsValue;
+                 
+                             if (transactionsValue !== undefined) {
+                                 var gvaValueSpan = document.getElementById('transactionsValue');
+                                 gvaValueSpan.textContent = transactionsValue;
+                             }
+                         }
+                     }, false);
+                 </script>
+  
+                 </div>
+              </div>
+           </li>
+
+
+
+ 
+       <h1 id="title-type" class="tiles__title-h2">Employment</h1>
+ 
+          <!-- TOTAL EMPLOYMENT -->  
+          <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/employmentandhousing/employment" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+                  <div class="box__content">
+                     <h3 class="font-size--h4">
+                        <a class="underline-link" href="/employmentandhousing/employment"> Total Employment: Biannually updated </a>
+                     </h3>
+                     <p class="flush">The total number of individuals who are currently employed within the jurisdiction, indicating the size of the workforce, irrespective of their part-time or full-time employment status</p>
+                  </div>
+               </div>
+               <div class="col col--md-15 col--lg-14">
+                  <div style="height:96px;">
+                     <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/employmentandhousing/employment">
+                        <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/employmentandhousing/employmentSL"></iframe>
+                     </div>
+                  </div>
+               </div>
+               <div class="col col--md-13 col--lg-18">
+                  <div class="tiles__content">
+   
+                     <span class="tiles__preunit tiles__preunit--list"></span>
+                     <span class="tiles__figure tiles__figure--list" id="employmentValue"></span>
+                     <span class="tiles__unit tiles__unit--list"></span>
+                     <dl class="tiles__dl">
+                        <dt class="tiles__dt">Release date:</dt><dd class="flush">June 2022</dd>
+                        <dt class="tiles__dt">Next release:</dt><dd class="flush">Dec 2023</dd>
+                     </dl>
+                     <script>
+                        window.addEventListener('message', function (event) {
+                              if (event.origin === 'https://stats.je') {
+                                 var formattedemploymentValue = event.data.formattedemploymentValue;
+                     
+                                 if (formattedemploymentValue !== undefined) {
+                                    var gdpValueSpan = document.getElementById('employmentValue');
+                                    gdpValueSpan.textContent = formattedemploymentValue;
+                                 }
+                              }
+                        }, false);
+                     </script>
+   
+                  </div>
+               </div>
+          </li>
+
+
+          <!-- EMPLOYMENT BY SECTOR -->  
+          <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/employmentandhousing/employmentbysector" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+                <div class="box__content">
+                   <h3 class="font-size--h4">
+                      <a class="underline-link" href="/employmentandhousing/employmentbysector"> Employment by Sector: Biannually updated </a>
+                   </h3>
+                   <p class="flush">The total number of individuals who are currently employed within the jurisdiction, indicating the size of the workforce, irrespective of their part-time or full-time employment status</p>
+                </div>
+             </div>
+             <div class="col col--md-15 col--lg-14">
+                <div style="height:96px;">
+                   <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/employmentandhousing/employmentbysector">
+                      <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/employmentandhousing/employmentcomparisonSL"></iframe>
+                   </div>
+                </div>
+             </div>
+             <div class="col col--md-13 col--lg-18">
+                <div class="tiles__content">
+                   <span class="tiles__preunit tiles__preunit--list"></span>
+                   <span class="tiles__figure tiles__figure--list" id="employmentCOMPValue"></span>
+                   <span class="tiles__unit tiles__unit--list"></span>
+                   <dl class="tiles__dl">
+                      <dt class="tiles__dt">Release date:</dt><dd class="flush">June 2022</dd>
+                      <dt class="tiles__dt">Next release:</dt><dd class="flush">Dec 2023</dd>
+                   </dl>
+                   <script>
+                       window.addEventListener('message', function (event) {
+                           if (event.origin === 'https://stats.je') {
+                               var formattedemploymentCOMPValue = event.data.formattedemploymentCOMPValue;
+                   
+                               if (formattedemploymentCOMPValue !== undefined) {
+                                   var gdpValueSpan = document.getElementById('employmentCOMPValue');
+                                   gdpValueSpan.textContent = formattedemploymentCOMPValue;
+                               }
+                           }
+                       }, false);
+                   </script>
+
+
+
+                </div>
+             </div>
+          </li>
+
+
+
+          
+       </ul>
+       <a class="underline-link" href="#main">Back to top</a>
+    </div> 
+    
+<script>
+   const hoverItems = document.querySelectorAll('.js-hover-click');
+
+   hoverItems.forEach(item => {
+       item.addEventListener('mouseenter', () => {
+           item.style.backgroundColor = '#c2c2c2';
+       });
+
+       item.addEventListener('mouseleave', () => {
+           item.style.backgroundColor = '';
+       });
+
+       item.addEventListener('click', () => {
+           const link = item.getAttribute('data-link');
+           if (link) {
+               redirectToLink(link);
+           }
+       });
+   });
+
+   function redirectToLink(url) {
+       window.location.href = url;
+   }
+</script>
+
+</section>
+ 
+

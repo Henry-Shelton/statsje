@@ -1,0 +1,47 @@
+<div class="wrapper">
+    <div class="col-wrap">
+       <div class="col">
+            <div class="col col--md-47 col--lg-48">
+                <h1 class="page-neutral-intro__title margin-top--1">
+                    Behavioural Health Trends
+                </h1>
+                <p class="page-neutral-intro__content">
+                        Data on key health behaviors, including breastfeeding practices, smoking prevalence, alcohol consumption patterns, physical activity levels, and the percentage of individuals meeting the 5-a-day fruit and vegetable consumption guideline. This dataset is a valuable resource for researchers and policymakers to analyze and address various aspects of public health behavior.                <p class="margin-bottom--3">
+                   <strong>Jump to:</strong>
+                   <a href="#activity">Physical Activity</a> |
+                   <a href="#alcohol">Alcohol Consumption</a> |
+                   <a href="#smoking">Smoking Trends</a> 
+
+
+                </p>
+            </div>
+       </div>
+    </div>
+ </div>
+ 
+ <h2 id="activity" class="tiles__title-h2">Physical Activity</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/healthandgov/activity">
+ </iframe>
+
+ <h2 id="alcohol" class="tiles__title-h2">Alcohol Consumption</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/healthandgov/alcohol">
+ </iframe>
+
+ <h2 id="smoking" class="tiles__title-h2">Smoking Trends</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/healthandgov/smoking">
+ </iframe>
+ 
+ <style>
+   .responsive-iframe-first {
+     width: 100%;
+     height: 500px; /* Set your preferred default height for the first iframe */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-first {
+       height: 250px; /* Adjust the height for smaller screens for the first iframe */
+     }
+    }
+ </style>

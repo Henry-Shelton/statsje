@@ -1,0 +1,45 @@
+<div class="wrapper">
+    <div class="col-wrap">
+       <div class="col">
+          <div class="col col--md-47 col--lg-48">
+             <h1 class="page-neutral-intro__title margin-top--1">
+                Business Outlook Metrics
+             </h1>
+             <p class="page-neutral-intro__content margin-bottom--3">
+               Business Outlook Metrics" encompass key indicators such as the Business Confidence Index, sales forecasts, and investment intentions, providing insights into business sentiment and performance. These metrics inform strategic planning and decision-making by offering valuable perspectives on economic health and market conditions.               </p>
+               <p>
+                  <strong>Jump to:</strong>
+                  <a href="#Econ">Business activity and employment in 3 months time</a> |
+                  <a href="#Econ2">Business input costs and product prices in 3 months time</a>
+               </p> 
+               
+               <p class="page-neutral-intro__content" style="color: red;">
+                  API Error
+               <p>
+                  
+          </div>
+       </div>
+    </div>
+ </div>
+ 
+ <h2 id="Econ" class="tiles__title-h2">Predicted change in business activity and employment in 3 months time</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/econandbusiness/futurebusinessemploy">
+ </iframe>
+
+ <h2 id="Econ2" class="tiles__title-h2">Predicted change in business input costs and product prices in 3 months time</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/econandbusiness/futureprices">
+ </iframe>
+
+ <style>
+   .responsive-iframe-first {
+     width: 100%;
+     height: 500px; /* Set your preferred default height for the first iframe */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-first {
+       height: 250px; /* Adjust the height for smaller screens for the first iframe */
+     }
+    }
+ </style>

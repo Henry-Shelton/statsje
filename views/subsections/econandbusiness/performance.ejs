@@ -1,0 +1,50 @@
+<div class="wrapper">
+    <div class="col-wrap">
+       <div class="col">
+          <div class="col col--md-47 col--lg-48">
+             <h1 class="page-neutral-intro__title margin-top--1">
+                Private Business Performance Metrics
+             </h1>
+               <p class="page-neutral-intro__content margin-bottom--3">
+                  Private business performance in Jersey evaluates the economic activity, productivity, and profitability of local businesses within the region.              
+               </p>
+               <p>
+                  <strong>Jump to:</strong>
+                  <a href="#Econ">Economic Activity and Growth</a> |
+                  <a href="#Econ2">Costs and Prices</a> |
+                  <a href="#Econ3">Financial Health</a>
+               </p>  
+               <p class="page-neutral-intro__content" style="color: red;">
+                  Currently limited to non-finance sector industries due to API issues.
+               <p>    
+          </div>
+       </div>
+    </div>
+ </div>
+ 
+ <h2 id="Econ" class="tiles__title-h2">Economic Activity and Growth</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/econandbusiness/economicactivitygrowth">
+ </iframe>
+ 
+ <h2 id="Econ2" class="tiles__title-h2">Costs and Prices</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/econandbusiness/costsprices">
+ </iframe>
+
+ <h2 id="Econ3" class="tiles__title-h2">Financial Health</h2>
+ <iframe 
+ class="responsive-iframe-first" frameBorder="0" src="https://stats.je/api/econandbusiness/financialhealth">
+ </iframe>
+
+ <style>
+   .responsive-iframe-first {
+     width: 100%;
+     height: 500px; /* Set your preferred default height for the first iframe */
+   }
+   @media (max-width: 600px) {
+     .responsive-iframe-first {
+       height: 250px; /* Adjust the height for smaller screens for the first iframe */
+     }
+    }
+ </style>

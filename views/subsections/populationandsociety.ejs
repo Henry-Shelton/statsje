@@ -1,0 +1,219 @@
+<head>
+   <!-- Google tag (gtag.js) -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=G-TPX1RN22P5"></script>
+   <script>
+   window.dataLayer = window.dataLayer || [];
+   function gtag(){dataLayer.push(arguments);}
+   gtag('js', new Date());
+
+   gtag('config', 'G-TPX1RN22P5');
+   </script>
+</head>
+
+<!-- MAIN BODY -->  
+<section>
+    <div class="wrapper">
+ 
+       <ul class="list--neutral margin-top--half">
+
+
+         <h1 id="title-type" class="tiles__title-h2">Population</h1>
+ 
+
+         <!-- POPULATION TOTAL -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/populationandsociety/populationandmigration" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+              <div class="box__content">
+                 <h3 class="font-size--h4">
+                    <a class="underline-link" href="/populationandsociety/populationandmigration"> Total Population: Annually updated </a>
+                 </h3>
+                 <p class="flush">
+                     Essential population data including population estimates, annual change, net migration (by registered and licensed individuals), and natural growth, providing a comprehensive snapshot of demographic trends and dynamics.
+                  </p>
+              </div>
+           </div>
+           <div class="col col--md-15 col--lg-14">
+              <div style="height:96px;">
+                 <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/populationandsociety/populationandmigration">
+                    <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/populationandsociety/populationandmigrationSL"></iframe>
+                 </div>
+              </div>
+           </div>
+           <div class="col col--md-13 col--lg-18">
+              <div class="tiles__content">
+  
+                 <span class="tiles__preunit tiles__preunit--list"></span>
+                 <span class="tiles__figure tiles__figure--list" id="populationValueDiv"></span>
+                 <span class="tiles__unit tiles__unit--list"></span>
+                 <dl class="tiles__dl">
+                    <dt class="tiles__dt">Release date:</dt><dd class="flush">2022</dd>
+                    <dt class="tiles__dt">Next release:</dt><dd class="flush">2023</dd>
+                 </dl>
+                 <script>
+                     window.addEventListener('message', function (event) {
+                         if (event.origin === 'https://stats.je') {
+                             var populationValue = event.data.populationValue;
+                 
+                             if (populationValue !== undefined) {
+                                 var populationValueDiv = document.getElementById('populationValueDiv');
+                                 populationValueDiv.textContent = populationValue;
+                             }
+                         }
+                     }, false);
+                 </script>
+  
+                 </div>
+              </div>
+           </li>
+
+
+               <!-- BIRTHS/DEATHS DATA -->  
+               <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/populationandsociety/birthsdeaths" style="cursor: pointer;">
+                  <div class="col col--md-15 col--lg-27">
+                     <div class="box__content">
+                        <h3 class="font-size--h4">
+                           <a class="underline-link" href="/populationandsociety/birthsdeaths"> Population Dynamics (births/deaths): Annually updated </a>
+                        </h3>
+                        <p class="flush">
+                           Key statistics, like births, general fertility rate (GFR), mortality, and median lifespan in Jersey, offer crucial insights for healthcare planning and policy development.                </p>
+                     </div>
+                  </div>
+                  <div class="col col--md-15 col--lg-14">
+                     <div style="height:96px;">
+                        <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/populationandsociety/birthsdeaths">
+                           <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/populationandsociety/birthdeathsSL"></iframe>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col col--md-13 col--lg-18">
+                     <div class="tiles__content">
+         
+                        <span class="tiles__preunit tiles__preunit--list"></span>
+                        <span class="tiles__figure tiles__figure--list" id="fertilityValueDiv"></span>
+                        <span class="tiles__unit tiles__unit--list"> GFR</span>
+                        <dl class="tiles__dl">
+                           <dt class="tiles__dt">Release date:</dt><dd class="flush">2022</dd>
+                           <dt class="tiles__dt">Next release:</dt><dd class="flush">2023</dd>
+                        </dl>
+                        <script>
+                            window.addEventListener('message', function (event) {
+                                if (event.origin === 'https://stats.je') {
+                                    var fertilityValue = event.data.fertilityValue;
+                        
+                                    if (fertilityValue !== undefined) {
+                                        var fertilityValueDiv = document.getElementById('fertilityValueDiv');
+                                        fertilityValueDiv.textContent = fertilityValue;
+                                    }
+                                }
+                            }, false);
+                        </script>
+         
+                        </div>
+                     </div>
+                  </li>
+
+           
+         <!-- POPULATION PYRAMID -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/populationandsociety/populationpyramid" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+              <div class="box__content">
+                 <h3 class="font-size--h4">
+                    <a class="underline-link" href="/populationandsociety/populationpyramid"> Population Pyramid (age-sex distribution): Annually updated </a>
+                 </h3>
+                 <p class="flush">
+                     Jersey's 2021 population pyramid illustrates age and gender distribution trends and sex ration (M:F) between within the general population.
+               </p>
+              </div>
+           </div>
+           <div class="col col--md-15 col--lg-14">
+              <div style="height:96px;">
+                 <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/populationandsociety/populationpyramid">
+                    <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/populationandsociety/populationpyramidSL"></iframe>
+                 </div>
+              </div>
+           </div>
+           <div class="col col--md-13 col--lg-18">
+              <div class="tiles__content">
+  
+                 <span class="tiles__preunit tiles__preunit--list"></span>
+                 <span class="tiles__figure tiles__figure--list" id="populationValueDiv">0.942</span>
+                 <span class="tiles__unit tiles__unit--list"> (M:F)</span>
+                 <dl class="tiles__dl">
+                    <dt class="tiles__dt">Release date:</dt><dd class="flush">2021</dd>
+                    <dt class="tiles__dt">Next release:</dt><dd class="flush">2031</dd>
+                 </dl>
+                 <script>
+                     window.addEventListener('message', function (event) {
+                         if (event.origin === 'https://stats.je') {
+                             var populationValue = event.data.populationValue;
+                 
+                             if (populationValue !== undefined) {
+                                 var populationValueDiv = document.getElementById('populationValueDiv');
+                                 populationValueDiv.textContent = populationValue;
+                             }
+                         }
+                     }, false);
+                 </script>
+  
+                 </div>
+              </div>
+           </li>
+
+
+ 
+           <h1 id="title-type" class="tiles__title-h2">Society</h1>
+ 
+ 
+           <!-- CENSUS DATA -->  
+           <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/populationandsociety/census" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+                 <div class="box__content">
+                    <h3 class="font-size--h4">
+                       <a class="underline-link" href="/populationandsociety/census"> Census Data (2001-2021) </a>
+                    </h3>
+                    <p class="flush">
+                        Jersey Census Report Summary: Comprehensive Insights, Long-Term Trends, and Projections into Jersey's Demographics and Socioeconomic Landscape                    </p>
+                 </div>
+              </div>
+           </li>
+ 
+ 
+ 
+           
+        </ul>
+        <a class="underline-link" href="#main">Back to top</a>
+     </div>
+  </section>
+
+
+
+  <script>
+   const hoverItems = document.querySelectorAll('.js-hover-click');
+
+   hoverItems.forEach(item => {
+       item.addEventListener('mouseenter', () => {
+           item.style.backgroundColor = '#c2c2c2';
+       });
+
+       item.addEventListener('mouseleave', () => {
+           item.style.backgroundColor = '';
+       });
+
+       item.addEventListener('click', () => {
+           const link = item.getAttribute('data-link');
+           if (link) {
+               redirectToLink(link);
+           }
+       });
+   });
+
+   function redirectToLink(url) {
+       window.location.href = url;
+   }
+   </script>
+
+
+ 
+ </body>
+ 
+</html>

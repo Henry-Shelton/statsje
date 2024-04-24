@@ -1,0 +1,264 @@
+<head>
+   <!-- Google tag (gtag.js) -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=G-TPX1RN22P5"></script>
+   <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      
+      gtag('config', 'G-TPX1RN22P5');
+   </script>
+</head>
+<!-- MAIN BODY -->  
+<section>
+   <div class="wrapper">
+      <ul class="list--neutral margin-top--half">
+         <h1 id="title-type" class="tiles__title-h2">Economy</h1>
+         <!-- GDP -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/econandbusiness/gdp" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/econandbusiness/gdp"> Gross Domestic Product: Annually updated £m </a>
+                  </h3>
+                  <p class="flush">The total monetary value of all goods and services annually produced in Jersey, serving as an indicator of the economy's size</p>
+               </div>
+            </div>
+            <div class="col col--md-15 col--lg-14">
+               <div style="height:96px;">
+                  <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/econandbusiness/gdp">
+                     <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/econandbusiness/gdpSL"></iframe>
+                  </div>
+               </div>
+            </div>
+            <div class="col col--md-13 col--lg-18">
+               <div class="tiles__content">
+                  <span class="tiles__preunit tiles__preunit--list">£</span>
+                  <span class="tiles__figure tiles__figure--list" id="gdpValue"></span>
+                  <span class="tiles__unit tiles__unit--list"> m</span>
+                  <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt>
+                     <dd class="flush">2022</dd>
+                     <dt class="tiles__dt">Next release:</dt>
+                     <dd class="flush">2023</dd>
+                  </dl>
+                  <script> 
+                     window.addEventListener('message', function (event) {
+                        if (event.origin === 'https://stats.je') {
+                              var formattedGDPValue = event.data.formattedGDPValue;
+                     
+                              if (formattedGDPValue !== undefined) {
+                                 var gdpValueSpan = document.getElementById('gdpValue');
+                                 gdpValueSpan.textContent = formattedGDPValue;
+                              }
+                        }
+                     }, false);
+                  </script>
+               </div>
+            </div>
+         </li>
+         <!-- GVA -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/econandbusiness/gva" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/econandbusiness/gva"> Gross Value Added: Annually updated £m </a>
+                  </h3>
+                  <p class="flush">The net value created by economic activities in Jersey, indicating its economic growth and development</p>
+               </div>
+            </div>
+            <div class="col col--md-15 col--lg-14">
+               <div style="height:96px;">
+                  <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/econandbusiness/gva">
+                     <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/econandbusiness/gvaSL"></iframe>
+                  </div>
+               </div>
+            </div>
+            <div class="col col--md-13 col--lg-18">
+               <div class="tiles__content">
+                  <span class="tiles__preunit tiles__preunit--list">£</span>
+                  <span class="tiles__figure tiles__figure--list" id="gvaValue"></span>
+                  <span class="tiles__unit tiles__unit--list"> m</span>
+                  <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt>
+                     <dd class="flush">2022</dd>
+                     <dt class="tiles__dt">Next release:</dt>
+                     <dd class="flush">2023</dd>
+                  </dl>
+                  <script>
+                     window.addEventListener('message', function (event) {
+                        if (event.origin === 'https://stats.je') {
+                              var formattedGVAValue = event.data.formattedGVAValue;
+                     
+                              if (formattedGVAValue !== undefined) {
+                                 var gvaValueSpan = document.getElementById('gvaValue');
+                                 gvaValueSpan.textContent = formattedGVAValue;
+                              }
+                        }
+                     }, false);
+                  </script>
+               </div>
+            </div>
+         </li>
+         <!-- INFLATION -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/econandbusiness/inflation" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/econandbusiness/inflation"> Retail Price Index: Quarterly updated </a>
+                  </h3>
+                  <p class="flush">A measure of inflation that reflects changes in the prices of goods and services commonly bought by households</p>
+               </div>
+            </div>
+            <div class="col col--md-15 col--lg-14">
+               <div style="height:96px;">
+                  <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/econandbusiness/inflation">
+                     <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/econandbusiness/rpiySL"></iframe>
+                  </div>
+               </div>
+            </div>
+            <div class="col col--md-13 col--lg-18">
+               <div class="tiles__content">
+                  <span class="tiles__preunit tiles__preunit--list"></span>
+                  <span class="tiles__figure tiles__figure--list" id="rpiyValue"></span>
+                  <span class="tiles__unit tiles__unit--list">%</span>
+                  <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt>
+                     <dd class="flush">Sept 2023</dd>
+                     <dt class="tiles__dt">Next release:</dt>
+                     <dd class="flush">Dec 2023</dd>
+                  </dl>
+                  <script>
+                     window.addEventListener('message', function (event) {
+                        if (event.origin === 'https://stats.je') {
+                              var formattedRPIYValue = event.data.formattedRPIYValue;
+                     
+                              if (formattedRPIYValue !== undefined) {
+                                 var gvaValueSpan = document.getElementById('rpiyValue');
+                                 gvaValueSpan.textContent = formattedRPIYValue;
+                              }
+                        }
+                     }, false);
+                  </script>
+               </div>
+            </div>
+         </li>
+         <h1 id="title-type" class="tiles__title-h2">Business</h1>
+         <!-- BUSINESS PERFORMANCE -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/econandbusiness/performance" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/econandbusiness/performance"> Private sector performance: Quarterly updated </a>
+                  </h3>
+                  <p class="flush">Private sector business performance encompasses various aspects, including business activity, new ventures, profitability, employment, and overall business optimism.</p>
+               </div>
+            </div>
+            <div class="col col--md-15 col--lg-14">
+               <div style="height:96px;">
+                  <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/econandbusiness/performance">
+                     <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/econandbusiness/economicactivitygrowthSL"></iframe>
+                  </div>
+               </div>
+            </div>
+            <div class="col col--md-13 col--lg-18">
+               <div class="tiles__content">
+                  <span class="tiles__preunit tiles__preunit--list"></span>
+                  <span class="tiles__figure tiles__figure--list" id="BusActValue"></span>
+                  <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt>
+                     <dd class="flush">Sept 2023</dd>
+                     <dt class="tiles__dt">Next release:</dt>
+                     <dd class="flush">Dec 2023</dd>
+                  </dl>
+                  <script>
+                     window.addEventListener('message', function (event) {
+                        if (event.origin === 'https://stats.je') {
+                              var formattedBusActValue = event.data.formattedBusActValue;
+                     
+                              if (formattedBusActValue !== undefined) {
+                                 var gvaValueSpan = document.getElementById('BusActValue');
+                                 gvaValueSpan.textContent = formattedBusActValue;
+                              }
+                        }
+                        
+                     }, false);
+                  </script>
+               </div>
+            </div>
+         </li>
+         <!-- BUSINESS OUTLOOK -->  
+         <li class="col-wrap padding-top--2 padding-bottom--2 padding-left--1 flush-col js-hover-click" data-link="/econandbusiness/outlook" style="cursor: pointer;">
+            <div class="col col--md-15 col--lg-27">
+               <div class="box__content">
+                  <h3 class="font-size--h4">
+                     <a class="underline-link" href="/econandbusiness/outlook"> Business outlook metrics: Quarterly updated </a>
+                  </h3>
+                  <p class="flush">Business outlook metrics pertain to anticipated future business activity, employment levels, input costs, and product prices </p>
+               </div>
+            </div>
+            <div class="col col--md-15 col--lg-14">
+               <div style="height:96px;">
+                  <div class="sparkline" style="height:100%" data-sparkline-ABMI data-uri="/econandbusiness/outlook">
+                     <iframe height="500px" width="100%" frameBorder="0" src="https://stats.je/api/econandbusiness/futurebusinessemploySL"></iframe>
+                  </div>
+               </div>
+            </div>
+            <div class="col col--md-13 col--lg-18">
+               <div class="tiles__content">
+                  <span class="tiles__preunit tiles__preunit--list">+</span>
+                  <span class="tiles__figure tiles__figure--list" id="futurebusinessValue"></span>
+                  <span class="tiles__unit tiles__unit--list"></span>
+                  <dl class="tiles__dl">
+                     <dt class="tiles__dt">Release date:</dt>
+                     <dd class="flush">Sept 2023</dd>
+                     <dt class="tiles__dt">Next release:</dt>
+                     <dd class="flush">Dec 2023</dd>
+                  </dl>
+                  <script>
+                     window.addEventListener('message', function (event) {
+                        if (event.origin === 'https://stats.je') {
+                              var formattedfuturebusinessValue = event.data.formattedfuturebusinessValue;
+                     
+                              if (formattedfuturebusinessValue !== undefined) {
+                                 var gvaValueSpan = document.getElementById('futurebusinessValue');
+                                 gvaValueSpan.textContent = formattedfuturebusinessValue;
+                              }
+                        }
+                     }, false);
+                  </script>
+               </div>
+            </div>
+         </li>
+
+      </ul>
+      
+      <a class="underline-link" href="#main">Back to top</a>
+   </div>
+</section>
+<script>
+   const hoverItems = document.querySelectorAll('.js-hover-click');
+   
+   hoverItems.forEach(item => {
+       item.addEventListener('mouseenter', () => {
+           item.style.backgroundColor = '#c2c2c2';
+       });
+   
+       item.addEventListener('mouseleave', () => {
+           item.style.backgroundColor = '';
+       });
+   
+       item.addEventListener('click', () => {
+           const link = item.getAttribute('data-link');
+           if (link) {
+               redirectToLink(link);
+           }
+       });
+   });
+   
+   function redirectToLink(url) {
+       window.location.href = url;
+   }
+</script>
+</body>
+</html>
