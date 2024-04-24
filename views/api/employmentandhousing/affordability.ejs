@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        h4.tiles__title-h2 {
+            text-align: center;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <h4 class="tiles__title-h2">Comparison between HPI & AEI</h4>
+    <canvas id="line-chart"></canvas>
+    <br><br>
+    <h4 class="tiles__title-h2">HPI:AEI (Unaffordability Ratio)</h4>
+    <canvas id="ratio-chart"></canvas>
+
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=d8381a8b-ca8c-4112-8674-d32bafdeeb4c';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Extract the data for the chart
+                var records = response.result.records;
+                var years = records.map(function (record) {
+                    var year = record.Year;
+                    return year;
+                });
+                var hpiData = records.map(function (record) {
+                    return parseFloat(record["House Prices Index"]);
+                });
+                var aeiData = records.map(function (record) {
+                    return parseFloat(record["Average Earnings Index"]);
+                });
+                var hpiToAeiRatioData = hpiData.map((hpi, index) => {
+                    return (hpi / aeiData[index]);
+                });
+
+                // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: 'House Prices Index (HPI)',
+                                data: hpiData,
+                                borderColor: 'rgba(139, 0, 0, 0.5)', // Red with 50% transparency
+                                borderWidth: 1, // Set line width to 1
+                                pointRadius: 0, // Set point radius to 0 to remove data point circles
+                            },
+                            {
+                                label: 'Average Earnings Index (AEI)',
+                                data: aeiData,
+                                borderColor: 'rgba(0, 128, 0, 0.5)', // Green with 50% transparency
+                                borderWidth: 1, // Set line width to 1
+                                pointRadius: 0, // Set point radius to 0 to remove data point circles
+                            },
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Secondary industry sectors', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                }, 
+                                title: {
+                                    display: true,
+                                    text: 'Year', // X-axis title
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Value (£ thousands)', // Y-axis title
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+                // Create a separate chart for the ratio
+var ratioCtx = document.getElementById('ratio-chart').getContext('2d');
+var ratioChart = new Chart(ratioCtx, {
+    type: 'line',
+    plugins: [
+        {
+            afterDraw: chart => {
+                let yAxis = chart.scales.y;
+                let ctx = chart.ctx;
+                ctx.save();
+
+                ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
+                ctx.fillRect(0, yAxis.getPixelForValue(2.0), chart.width, yAxis.getPixelForValue(1.6) - yAxis.getPixelForValue(2.0));
+
+                ctx.fillStyle = 'rgba(255, 0, 0, 0.1)';
+                ctx.fillRect(0, yAxis.getPixelForValue(1.6), chart.width, yAxis.getPixelForValue(1.2) - yAxis.getPixelForValue(1.6));
+
+                ctx.fillStyle = 'rgba(169, 169, 169, 0.1)';
+                ctx.fillRect(0, yAxis.getPixelForValue(1.2), chart.width, yAxis.getPixelForValue(0.8) - yAxis.getPixelForValue(1.2));
+
+                ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+                ctx.fillRect(0, yAxis.getPixelForValue(0.8), chart.width, yAxis.getPixelForValue(0.4) - yAxis.getPixelForValue(0.8));
+
+                ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
+                ctx.fillRect(0, yAxis.getPixelForValue(0.4), chart.width, yAxis.getPixelForValue(0.0) - yAxis.getPixelForValue(0.4));
+
+                ctx.restore();
+            },
+        },
+    ],
+    data: {
+        labels: years,
+        datasets: [
+            {
+                label: 'HPI to AEI Ratio',
+                data: hpiToAeiRatioData,
+                borderColor: 'rgba(0, 0, 0, 1)',
+                borderWidth: 2,
+                pointRadius: 0,
+            },
+        ],
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'HPI to AEI Ratio',
+            fontSize: 25,
+        },
+        scales: {
+            x: {
+                type: 'category',
+                labels: years,
+                grid: {
+                    display: false,
+                },
+                title: {
+                    display: true,
+                    text: 'Year',
+                },
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Ratio',
+                },
+                min: 0,
+                max: 2,
+            },
+        },
+        plugins: {
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+            },
+        },
+    },
+});
+ratioChart.options.plugins.legend.display = true;
+
+
+
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

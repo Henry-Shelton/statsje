@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            border: 1px solid #ddd;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <canvas id="line-chart"></canvas>
+
+    <table id="hpi-change-table">
+        <thead>
+            <tr>
+                <th>Time Peroid</th>
+                <th>Absolute Change</th>
+                <th>Percentage Change</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Only the latest quarterly change data will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=07e4474f-14df-49e4-9ed8-695b4adfd3f4';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Extract the data for the chart
+                var records = response.result.records;
+                var years = records.map(function (record) {
+                    var year = record.Quarter;
+                    return year;
+                });
+                var hpiData = records.map(function (record) {
+                    return parseFloat(record["House Price Index (seasonally adjusted)"]);
+                });
+
+                // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: 'House Price Index (seasonally adjusted)',
+                                data: hpiData,
+                                borderColor: 'black',
+                                borderWidth: 1, // Set line width to 1
+                            }
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'House Price Index (seasonally adjusted)', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year', // X-axis title
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'HPI', // Y-axis title
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+                // Calculate the latest quarterly change
+                var latestQuarterChange = hpiData[hpiData.length - 1] - hpiData[hpiData.length - 2];
+
+                // Calculate the yearly change (assuming data is quarterly)
+                var yearlyChange = hpiData[hpiData.length - 1] - hpiData[hpiData.length - 5];
+
+                // Calculate the 5-year change (assuming data is quarterly)
+                var fiveYearChange = hpiData[hpiData.length - 1] - hpiData[hpiData.length - 20];
+
+                // Set the color based on the sign of the change
+                var latestQuarterChangeColor = latestQuarterChange < 0 ? 'red' : 'green';
+                var yearlyChangeColor = yearlyChange < 0 ? 'red' : 'green';
+                var fiveYearChangeColor = fiveYearChange < 0 ? 'red' : 'green';
+
+                // Populate the table dynamically
+                var tableBody = document.getElementById('hpi-change-table').getElementsByTagName('tbody')[0];
+                tableBody.innerHTML = `
+                    <tr>
+                        <td>Quarterly Change</td>
+                        <td>${latestQuarterChange.toFixed(1)}</td>
+                        <td class="${latestQuarterChange < 0 ? 'negative' : 'positive'}" style="background-color: ${getBackgroundColor(latestQuarterChange)}">${((latestQuarterChange / hpiData[hpiData.length - 2]) * 100).toFixed(1)}%</td>
+                    </tr>
+                    <tr>
+                        <td>Yearly Change</td>
+                        <td>${yearlyChange.toFixed(1)}</td>
+                        <td class="${yearlyChange < 0 ? 'negative' : 'positive'}" style="background-color: ${getBackgroundColor(yearlyChange)}">${((yearlyChange / hpiData[hpiData.length - 5]) * 100).toFixed(1)}%</td>
+                    </tr>
+                    <tr>
+                        <td>5-Year Change</td>
+                        <td>${fiveYearChange.toFixed(1)}</td>
+                        <td class="${fiveYearChange < 0 ? 'negative' : 'positive'}" style="background-color: ${getBackgroundColor(fiveYearChange)}">${((fiveYearChange / hpiData[hpiData.length - 20]) * 100).toFixed(1)}%</td>
+                    </tr>
+                `;
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+
+        // Function to get background color based on percentage change
+        function getBackgroundColor(percentageChange) {
+            var maxPercentage = 100; // Maximum percentage for the gradient scale
+            var minColor, maxColor;
+
+            if (percentageChange >= 0) {
+                // Light green to dark green gradient for positive percentages
+                minColor = [144, 238, 144]; // Light Green
+                maxColor = [0, 100, 0];     // Dark Green
+            } else {
+                // Light red to dark red gradient for negative percentages
+                minColor = [255, 182, 193]; // Light Red
+                maxColor = [255, 0, 0];     // Dark Red
+            }
+
+            // Calculate the color based on the percentage change
+            var color = calculateGradientColor(minColor, maxColor, Math.min(Math.abs(percentageChange), maxPercentage) / maxPercentage);
+
+            return 'rgb(' + color.join(',') + ')';
+        }
+
+        // Function to calculate gradient color
+        function calculateGradientColor(startColor, endColor, percentage) {
+            var color = [];
+            for (var i = 0; i < 3; i++) {
+                color[i] = Math.round(startColor[i] + percentage * (endColor[i] - startColor[i]));
+            }
+            return color;
+        }
+
+    </script>
+</body>
+</html>

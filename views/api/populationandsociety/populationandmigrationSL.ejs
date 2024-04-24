@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sparkline Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="sparkline-chart"></canvas>
+    
+    <!-- Hidden div to store the last chart value -->
+    <div id="lastChartValue" style="display: none;"></div>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=75c9a5ed-e95e-4052-a7c8-96d5dab8a64a';
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+                var csvData = response.result.records;
+
+                // Extract the data for the sparkline chart
+                var years = csvData.map(function (row) {
+                    return row.Year;
+                });
+                var populationData = csvData.map(function (row) {
+                    return parseFloat(row["End of year population estimate"]);
+                });
+
+                // Extract the last chart value for "Total employment"
+                var lastChartValue = populationData[populationData.length - 1];
+
+                // Create a sparkline chart using Chart.js
+                var ctx = document.getElementById('sparkline-chart').getContext('2d');
+                var sparklineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years, // This sets the x-axis labels
+                        datasets: [{
+                            data: populationData,
+                            borderColor: 'black',
+                            borderWidth: 2,
+                            fill: true,
+                        }],
+                    },
+                    options: {
+                        elements: {
+                            point:{
+                                radius: 0
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                },
+                                ticks: {
+                                    maxRotation: 0, // Prevents label rotation
+                                    minRotation: 0, // Prevents label rotation
+                                    callback: function(value, index, values) {
+                                        // Show only the first and last x-axis labels
+                                        if (index === 0 || index === values.length - 1) {
+                                            return years[index];
+                                        } else {
+                                            return '';
+                                        }
+                                    }
+                                }
+                            },
+                            y: {
+                                display: false,
+                            },
+                        },
+                    },
+                });
+                
+            // Format the lastChartValue to two decimal places and store it in a variable
+            var populationValue = parseFloat(lastChartValue).toLocaleString();
+
+            // Put the formatted value into the hidden div
+            document.getElementById('lastChartValue').textContent = 'Last Chart Value: ' + populationValue;
+
+            // Send the formatted value to the parent window
+            window.parent.postMessage({ populationValue: populationValue }, '*');
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

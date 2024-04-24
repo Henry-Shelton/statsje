@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        h4.tiles__title-h2 {
+            text-align: center;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <h4 class="tiles__title-h2">Age groups 6 and 11</h4>
+    <canvas id="child-chart"></canvas>
+    <br><br>
+    <h4 class="tiles__title-h2">Adult Population</h4>
+    <canvas id="adult-chart"></canvas>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=205c04de-aa32-49e1-b8de-f16efac38783';
+        var apiUrlTwo = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=0ddf0435-fe5b-47c6-9f92-b3815b5798e6';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+                var records = response.result.records;
+                var years = records.map(function (record) {
+                    var year = record["End academic year"];
+                    return year;
+                });
+
+                // Child Data
+
+                var aeiData = records.map(function (record) {
+                    return parseFloat(record["Reception underweight"]) * 100;;
+                });
+
+                var aeiData2 = records.map(function (record) {
+                    return parseFloat(record["Reception healthy weight"]) * 100;;
+                });
+
+                var aeiData3 = records.map(function (record) {
+                    return parseFloat(record["Reception overweight"]) * 100;;
+                });
+
+                var aeiData4 = records.map(function (record) {
+                    return parseFloat(record["Reception obese"]) * 100;;
+                });
+
+                var aeiData5 = records.map(function (record) {
+                    return parseFloat(record["Reception overweight and obese"]) * 100;;
+                });
+
+                var aeiData6 = records.map(function (record) {
+                    return parseFloat(record["Year 6 underweight"]) * 100;;
+                });
+
+                var aeiData7 = records.map(function (record) {
+                    return parseFloat(record["Year 6 healthy weight"]) * 100;;
+                });
+
+                var aeiData8 = records.map(function (record) {
+                    return parseFloat(record["Year 6 overweight"]) * 100;;
+                });
+
+                var aeiData9 = records.map(function (record) {
+                    return parseFloat(record["Year 6 obese"]) * 100;;
+                });
+
+                var aeiData10 = records.map(function (record) {
+                    return parseFloat(record["Year 6 overweight and obese"]) * 100;;
+                });
+
+                var xhrTwo = new XMLHttpRequest();
+                xhrTwo.open('GET', apiUrlTwo, true);
+
+                xhrTwo.onload = function () {
+                    if (xhrTwo.status >= 200 && xhrTwo.status < 300) {
+                        var responseTwo = JSON.parse(xhrTwo.responseText);
+                        var recordsTwo = responseTwo.result.records;
+
+                        // Adult Data
+                        var adultYears = recordsTwo.map(function (record) {
+                            var year = record["Year"];
+                            return year;
+                        });
+
+                        var adultOverweightData = recordsTwo.map(function (record) {
+                            return parseFloat(record["Overweight"]) * 100;;
+                        });
+
+                        var adultObeseData = recordsTwo.map(function (record) {
+                            return parseFloat(record["Obese"]) * 100;;
+                        });
+
+                        var adultOverweightObeseData = recordsTwo.map(function (record) {
+                            return parseFloat(record["Overweight & obese"]) * 100;;
+                        });
+
+                        // Create a bar chart using Chart.js for Child Data
+                        var ctxChild = document.getElementById('child-chart').getContext('2d');
+                        var childBarChart = new Chart(ctxChild, {
+                            type: 'line',
+                            plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                            data: {
+                                labels: years,
+                                datasets: [
+                                {
+                                        label: 'Age 6 Underweight',
+                                        data: aeiData,
+                                        borderColor: '#9A28AE',
+                                        borderWidth: 2,
+                                        pointStyle: 'triangle',
+                                    },
+                                    {
+                                        label: 'Age 6 Healthy',
+                                        data: aeiData2,
+                                        borderColor: '#679E38',
+                                        borderWidth: 2,
+                                        pointStyle: 'triangle',
+                                    },
+                                    {
+                                        label: 'Age 6 Overweight',
+                                        data: aeiData3,
+                                        borderColor: '#F69D4F',
+                                        borderWidth: 2,
+                                        pointStyle: 'triangle',
+                                    },
+                                    {
+                                        label: 'Age 6 Obese',
+                                        data: aeiData4,
+                                        borderColor: '#FC6E01',
+                                        borderWidth: 2,
+                                        pointStyle: 'triangle',
+                                    },
+                                    {
+                                        label: 'Age 6 Overweight & Obese',
+                                        data: aeiData5,
+                                        borderColor: '#B71F1F',
+                                        borderWidth: 2,
+                                        pointStyle: 'triangle',
+                                    },
+                                    {
+                                        label: 'Age 11 Underweight',
+                                        data: aeiData6,
+                                        borderColor: '#9A28AE',
+                                        borderWidth: 2,
+                                    },
+                                    {
+                                        label: 'Age 11 Healthy',
+                                        data: aeiData7,
+                                        borderColor: '#679E38',
+                                        borderWidth: 2,
+                                    },
+                                    {
+                                        label: 'Age 11 Overweight',
+                                        data: aeiData8,
+                                        borderColor: '#F69D4F',
+                                        borderWidth: 2,
+                                    },
+                                    {
+                                        label: 'Age 11 Obese',
+                                        data: aeiData9,
+                                        borderColor: '#FC6E01',
+                                        borderWidth: 2,
+                                    },
+                                    {
+                                        label: 'Age 11 Overweight & Obese',
+                                        data: aeiData10,
+                                        borderColor: '#B71F1F',
+                                        borderWidth: 2,
+                                    },
+                                ],
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Child Obesity Data',
+                                    fontSize: 25,
+                                },
+                                scales: {
+                                    x: {
+                                        type: 'category',
+                                        labels: years,
+                                        grid: {
+                                            display: false,
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Year',
+                                        },
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: '% of age group',
+                                        },
+                                        min: 0,
+                                    },
+                                },
+                                plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                            },
+                        });
+                        childBarChart.options.plugins.legend.display = true;
+
+                        // Create a bar chart using Chart.js for Adult Data
+                        var ctxAdult = document.getElementById('adult-chart').getContext('2d');
+                        var adultBarChart = new Chart(ctxAdult, {
+                            type: 'line',
+                            plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                            data: {
+                                labels: adultYears,
+                                datasets: [
+                                    {
+                                        label: 'Adult Overweight',
+                                        data: adultOverweightData,
+                                        borderColor: '#F69D4F',
+                                        borderWidth: 2,
+                                    },
+                                    {
+                                        label: 'Adult Obese',
+                                        data: adultObeseData,
+                                        borderColor: '#FC6E01',
+                                        borderWidth: 2,
+                                    },
+                                    {
+                                        label: 'Total Adult Overweight & Obese',
+                                        data: adultOverweightObeseData,
+                                        borderColor: '#B71F1F',
+                                        borderWidth: 2,
+                                    },
+                                ],
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Adult Obesity Data',
+                                    fontSize: 25,
+                                },
+                                scales: {
+                                    x: {
+                                        type: 'category',
+                                        labels: adultYears,
+                                        grid: {
+                                            display: false,
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Year',
+                                        },
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: '% of adult population',
+                                        },
+                                        min: 0,
+                                    },
+                                },
+                                plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                            },
+                        });
+                        adultBarChart.options.plugins.legend.display = true;
+                    } else {
+                        console.error('Failed to load data from the second API');
+                    }
+                };
+
+                xhrTwo.send();
+            } else {
+                console.error('Failed to load data from the first API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

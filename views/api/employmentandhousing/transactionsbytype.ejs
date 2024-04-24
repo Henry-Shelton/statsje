@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        .chart-container {
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            border: 1px solid #ddd;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .positive {
+            color: green;
+        }
+        .negative {
+            color: red;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <div class="chart-container">
+        <h4 class="tiles__title-h2" style="text-align: center;">Flats</h4>
+        <canvas id="line-chart-flats"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h4 class="tiles__title-h2" style="text-align: center;">Houses</h4>
+        <canvas id="line-chart-houses"></canvas>
+    </div>
+
+    <table id="quarterly-change-table">
+        <thead>
+            <tr>
+                <th>Property Type</th>
+                <th>Quarterly Change</th>
+                <th>Yearly Change</th>
+                <th>5-Year Change</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Only the latest quarterly change data will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=a28698db-f916-4a44-818f-850eeea3df7e';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Extract the data for the chart
+                var records = response.result.records;
+                var years = records.map(function (record) {
+                    var year = record.Quarter;
+                    return year;
+                });
+                var flatsData = records.map(function (record) {
+                    return [
+                        parseFloat(record["1 Bed Flats"]),
+                        parseFloat(record["2 Bed Flats"]),
+                    ];
+                });
+                var housesData = records.map(function (record) {
+                    return [
+                        parseFloat(record["2 bed Houses"]),
+                        parseFloat(record["3 Bed Houses"]),
+                        parseFloat(record["4 Bed Houses"]),
+                    ];
+                });
+
+                // Create a line chart for houses using Chart.js
+                var ctxHouses = document.getElementById('line-chart-houses').getContext('2d');
+                var lineChartHouses = new Chart(ctxHouses, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: '2-bedroom Houses',
+                                data: housesData.map(data => data[0]),
+                                borderColor: '#FFA07A', // Change to a distinguishable color
+                                borderWidth: 2,
+                                pointRadius: 0,
+                            },
+                            {
+                                label: '3-bedroom Houses',
+                                data: housesData.map(data => data[1]),
+                                borderColor: '#00CED1', // Change to a distinguishable color
+                                borderWidth: 2,
+                                pointRadius: 0,
+                            },
+                            {
+                                label: '4-bedroom Houses',
+                                data: housesData.map(data => data[2]),
+                                borderColor: '#9370DB', // Change to a distinguishable color
+                                borderWidth: 2,
+                                pointRadius: 0,
+                            }
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Houses',
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year',
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Number of Property Transactions',
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+
+                // Create a line chart for flats using Chart.js
+                var ctxFlats = document.getElementById('line-chart-flats').getContext('2d');
+                var lineChartFlats = new Chart(ctxFlats, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: '1-bedroom Flats',
+                                data: flatsData.map(data => data[0]),
+                                borderColor: '#FF6384', // Change to a distinguishable color
+                                borderWidth: 2,
+                                pointRadius: 0,
+                            },
+                            {
+                                label: '2-bedroom Flats',
+                                data: flatsData.map(data => data[1]),
+                                borderColor: '#36A2EB', // Change to a distinguishable color
+                                borderWidth: 2,
+                                pointRadius: 0,
+                            },
+
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Flats',
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year',
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Number of Property Transactions',
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+
+                lineChartHouses.options.plugins.legend.display = true;
+                lineChartFlats.options.plugins.legend.display = true;
+
+                // Calculate the latest quarterly changes
+                var latestQuarterChangeFlats = {
+                    '1-bedroom Flats': flatsData[records.length - 1][0] - flatsData[records.length - 2][0],
+                    '2-bedroom Flats': flatsData[records.length - 1][1] - flatsData[records.length - 2][1],
+                };
+                var latestQuarterChangeHouses = {
+                    '2-bedroom Houses': housesData[records.length - 1][0] - housesData[records.length - 2][0],
+                    '3-bedroom Houses': housesData[records.length - 1][1] - housesData[records.length - 2][1],
+                    '4-bedroom Houses': housesData[records.length - 1][2] - housesData[records.length - 2][2],
+                };
+
+                // Calculate the yearly changes
+                var yearlyChangeFlats = {
+                    '1-bedroom Flats': flatsData[records.length - 1][0] - flatsData[records.length - 5][0],
+                    '2-bedroom Flats': flatsData[records.length - 1][1] - flatsData[records.length - 5][1],
+                };
+                var yearlyChangeHouses = {
+                    '2-bedroom Houses': housesData[records.length - 1][0] - housesData[records.length - 5][0],
+                    '3-bedroom Houses': housesData[records.length - 1][1] - housesData[records.length - 5][1],
+                    '4-bedroom Houses': housesData[records.length - 1][2] - housesData[records.length - 5][2],
+                };
+
+                // Calculate the 5-year changes
+                var fiveYearChangeFlats = {
+                    '1-bedroom Flats': flatsData[records.length - 1][0] - flatsData[records.length - 20][0],
+                    '2-bedroom Flats': flatsData[records.length - 1][1] - flatsData[records.length - 20][1],
+                };
+                var fiveYearChangeHouses = {
+                    '2-bedroom Houses': housesData[records.length - 1][0] - housesData[records.length - 20][0],
+                    '3-bedroom Houses': housesData[records.length - 1][1] - housesData[records.length - 20][1],
+                    '4-bedroom Houses': housesData[records.length - 1][2] - housesData[records.length - 20][2],
+                };
+
+                // Display the latest quarterly changes, yearly changes, and 5-year changes in the table
+                var tableBody = document.getElementById('quarterly-change-table').getElementsByTagName('tbody')[0];
+
+                function addRowToTable(rowData, cell1Text, cell2Value, cell3Value, cell4Value) {
+                    var row = tableBody.insertRow(-1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+
+                    cell1.textContent = cell1Text;
+                    cell2.textContent = typeof cell2Value === 'number' && !isNaN(cell2Value) ? cell2Value.toFixed(2) + '%' : cell2Value;
+                    cell3.textContent = typeof cell3Value === 'number' && !isNaN(cell3Value) ? cell3Value.toFixed(2) + '%' : cell3Value;
+                    cell4.textContent = typeof cell4Value === 'number' && !isNaN(cell4Value) ? cell4Value.toFixed(2) + '%' : cell4Value;
+
+                    // Apply coloring based on positive/negative values
+                    cell2.style.backgroundColor = getBackgroundColor(cell2Value);
+                    cell3.style.backgroundColor = getBackgroundColor(cell3Value);
+                    cell4.style.backgroundColor = getBackgroundColor(cell4Value);
+                }
+
+                function getBackgroundColor(value) {
+                    if (value > 0) {
+                        // Calculate intensity for positive values (green)
+                        return 'rgba(0, 255, 0, ' + (value / 100) + ')';
+                    } else if (value < 0) {
+                        // Calculate intensity for negative values (red)
+                        return 'rgba(255, 0, 0, ' + (-value / 100) + ')';
+                    } else {
+                        // Neutral (grey)
+                        return 'grey';
+                    }
+                }
+
+                // Add rows for latestQuarterChangeFlats
+                Object.entries(latestQuarterChangeFlats).forEach(function ([key, value]) {
+                    addRowToTable(latestQuarterChangeFlats, key, value, yearlyChangeFlats[key], fiveYearChangeFlats[key]);
+                });
+
+                // Add rows for latestQuarterChangeHouses
+                Object.entries(latestQuarterChangeHouses).forEach(function ([key, value]) {
+                    addRowToTable(latestQuarterChangeHouses, key, value, yearlyChangeHouses[key], fiveYearChangeHouses[key]);
+                });
+
+
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

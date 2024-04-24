@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+            font-family: Arial, sans-serif;
+            border: 1px solid #ddd;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #change-container {
+            text-align: center; /* Center align the text */
+        }
+        #change-text {
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+        }
+        #change-chart {
+            margin-top: 20px; /* Add some margin for spacing */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <h4 class="tiles__title-h2" style="text-align: center;">Property Transactions</h4>
+    <canvas id="line-chart"></canvas>
+
+    <h4 class="tiles__title-h2" style="text-align: center;">Quarterly Change</h4>
+    <canvas id="change-chart"></canvas>
+
+    <table id="change-table">
+        <thead>
+            <tr>
+                <th>Change Type</th>
+                <th>Value</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=a28698db-f916-4a44-818f-850eeea3df7e';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Extract the data for the chart
+                var records = response.result.records;
+                var years = records.map(function (record) {
+                    var year = record.Quarter;
+                    return year;
+                });
+                var totalData = records.map(function (record) {
+                    return parseFloat(record["Total"]);
+                });
+
+                // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: 'Number of property transactions',
+                                data: totalData,
+                                borderColor: 'black',
+                                borderWidth: 1, // Set line width to 1
+                            }
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Number of transactions', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year', // X-axis title
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Number of transactions', // Y-axis title
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+                // Calculate the change
+                var change = totalData.map((value, index) => index > 0 ? value - totalData[index - 1] : 0);
+
+// Calculate the moving average
+var movingAverage = [];
+var windowSize = 4; // Adjust the window size as needed
+
+for (var i = change.length - 1; i >= 0; i--) {
+    var sum = 0;
+    var count = 0;
+
+    for (var j = i; j > i - windowSize && j >= 0; j--) {
+        sum += change[j];
+        count++;
+    }
+
+    // If there are enough data points to calculate the average
+    if (count > 0) {
+        var average = sum / count;
+        movingAverage.unshift(parseInt(average)); // Convert to integer
+    } else {
+        movingAverage.unshift(null); // Insert null for positions without enough data
+    }
+}
+
+// Display the change in a new chart with a moving average line
+var changeCtx = document.getElementById('change-chart').getContext('2d');
+var changeChart = new Chart(changeCtx, {
+    type: 'bar',
+    plugins: [{
+        afterDraw: chart => {
+            if (chart.tooltip?._active?.length) {
+                let x = chart.tooltip._active[0].element.x;
+                let yAxis = chart.scales.y;
+                let ctx = chart.ctx;
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x, yAxis.top);
+                ctx.lineTo(x, yAxis.bottom);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+    }],
+    data: {
+        labels: years,
+        datasets: [
+            {
+                label: 'Yearly Average',
+                data: movingAverage,
+                type: 'line',
+                borderColor: 'black',
+                borderWidth: 2,
+                pointRadius: 0,
+            },
+            {
+                label: 'Change in transactions',
+                data: change,
+                backgroundColor: change.map(val => val >= 0 ? 'green' : 'red'),
+            },
+        ],
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Change in transactions with Moving Average', // Chart title
+            fontSize: 25,
+        },
+        scales: {
+            x: {
+                type: 'category',
+                labels: years,
+                title: {
+                    display: true,
+                    text: 'Year', // X-axis title
+                },
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Change', // Y-axis title
+                },
+            },
+        },
+        plugins: {
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+            },
+        },
+    },
+});
+
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+                // Display the total change value and percentage
+                var totalChange = totalData[totalData.length - 1] - totalData[0];
+                var totalChangePercent = ((totalChange / totalData[0]) * 100).toFixed(2);
+
+                // Calculate yearly change (assuming data is quarterly)
+                var yearlyChange = totalData[totalData.length - 1] - totalData[totalData.length - 5];
+                var yearlyChangePercent = ((yearlyChange / totalData[totalData.length - 5]) * 100).toFixed(2);
+
+                // Calculate 5-year change (assuming data is quarterly)
+                var fiveYearChange = totalData[totalData.length - 1] - totalData[totalData.length - 20];
+                var fiveYearChangePercent = ((fiveYearChange / totalData[totalData.length - 20]) * 100).toFixed(2);
+
+                // Set the color based on the sign of the percentage
+                var totalChangeColor = totalChangePercent < 0 ? 'red' : 'green';
+                var yearlyChangeColor = yearlyChangePercent < 0 ? 'red' : 'green';
+                var fiveYearChangeColor = fiveYearChangePercent < 0 ? 'red' : 'green';
+
+                // Populate the table dynamically
+                var tableBody = document.getElementById('change-table').getElementsByTagName('tbody')[0];
+                tableBody.innerHTML = `
+                    <tr>
+                        <td>Quarterly Change</td>
+                        <td>${totalChange}</td>
+                        <td style="color: ${totalChangeColor}">${totalChangePercent}%</td>
+                    </tr>
+                    <tr>
+                        <td>Yearly Change</td>
+                        <td>${yearlyChange}</td>
+                        <td style="color: ${yearlyChangeColor}">${yearlyChangePercent}%</td>
+                    </tr>
+                    <tr>
+                        <td>5-Year Change</td>
+                        <td>${fiveYearChange}</td>
+                        <td style="color: ${fiveYearChangeColor}">${fiveYearChangePercent}%</td>
+                    </tr>
+                `;
+
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        h4.tiles__title-h2 {
+            text-align: center;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+    
+    <h4 class="tiles__title-h2" style="text-align: center;">Percentage of Jersey adults self-identifying as having a long-term illness or disability (lasting 12 months or more)</h4>
+    <canvas id="illness-chart"></canvas>
+    <br><br>
+    <h4 class="tiles__title-h2">Percentage of these adults experiencing significant life challenges</h4>
+    <canvas id="child-chart"></canvas>
+    <br><br>
+    <h4 class="tiles__title-h2">Percentage of current GP patients with different registered medical conditions</h4>
+    <canvas id="adult-chart"></canvas>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=24068f2d-0c94-4452-87a6-78c2e1d8c9ce';
+        var apiUrlTwo = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=f9742510-a50d-47cc-80fb-a9a1a55f1526';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+                var records = response.result.records;
+                var years = records.map(function (record) {
+                    var year = record["Year"];
+                    return year;
+                });
+
+                // Child Data
+
+                var aeiData = records.map(function (record) {
+                    return parseFloat(record["Longstanding illness"]) * 100;;
+                });
+
+                var aeiData2 = records.map(function (record) {
+                    return parseFloat(record["Life limited a little"]) * 100;;
+                });
+
+                var aeiData3 = records.map(function (record) {
+                    return parseFloat(record["Life limited a lot"]) * 100;;
+                });
+
+                var xhrTwo = new XMLHttpRequest();
+                xhrTwo.open('GET', apiUrlTwo, true);
+
+                xhrTwo.onload = function () {
+                    if (xhrTwo.status >= 200 && xhrTwo.status < 300) {
+                        var responseTwo = JSON.parse(xhrTwo.responseText);
+                        var recordsTwo = responseTwo.result.records;
+
+                        // Adult Data
+                        var adultYears = recordsTwo.map(function (record) {
+                            var year = record["Quarter"];
+                            return year;
+                        });
+
+                        var adultOverweightHypertensionData = recordsTwo.map(function (record) {
+                            return parseFloat(record["hypertension"]) * 100;
+                        });
+                        var adultObeseObesityRegisterData = recordsTwo.map(function (record) {
+                            return parseFloat(record["obesity register"]) * 100;
+                        });
+                        var adultOverweightAsthmaData = recordsTwo.map(function (record) {
+                            return parseFloat(record["asthma"]) * 100;
+                        });
+                        var adultOverweightDiabetesMellitusData = recordsTwo.map(function (record) {
+                            return parseFloat(record["diabetes mellitus"]) * 100;
+                        });
+                        var adultObeseChronicKidneyDiseaseData = recordsTwo.map(function (record) {
+                            return parseFloat(record["chronic kidney disease"]) * 100;
+                        });
+                        var adultOverweightCoronaryHeartDiseaseData = recordsTwo.map(function (record) {
+                            return parseFloat(record["coronary heart disease"]) * 100;
+                        });
+                        var adultOverweightChronicObstructivePulmonaryDiseaseData = recordsTwo.map(function (record) {
+                            return parseFloat(record["chronic obstructive pulmonary disease"]) * 100;
+                        });
+                        var adultObeseAtrialFibrillationData = recordsTwo.map(function (record) {
+                            return parseFloat(record["atrial fibrillation"]) * 100;
+                        });
+                        var adultOverweightStrokeOrTransientIschaemicAttackData = recordsTwo.map(function (record) {
+                            return parseFloat(record["stroke or transient ischaemic attack (TIA)"]) * 100;
+                        });
+                        var adultOverweightHeartFailureData = recordsTwo.map(function (record) {
+                            return parseFloat(record["heart failure"]) * 100;
+                        });
+                        var adultOverweightMentalHealthIssuesData = recordsTwo.map(function (record) {
+                            return parseFloat(record["mental health issues"]) * 100;
+                        });
+                        var adultOverweightDementiaData = recordsTwo.map(function (record) {
+                            return parseFloat(record["dementia"]) * 100;
+                        });
+
+                        // Create a bar chart using Chart.js for Child Data
+                        var ctxChild = document.getElementById('illness-chart').getContext('2d');
+                        var childBarChart = new Chart(ctxChild, {
+                            type: 'line',
+                            plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                            data: {
+                                labels: years,
+                                datasets: [
+                                {
+                                        label: 'Longstanding illness',
+                                        data: aeiData,
+                                        borderColor: '#9A28AE',
+                                        borderWidth: 2,
+                                        pointStyle: 'none',
+                                    },
+                                ],
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Illness Data',
+                                    fontSize: 25,
+                                },
+                                scales: {
+                                    x: {
+                                        type: 'category',
+                                        labels: years,
+                                        grid: {
+                                            display: false,
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Year',
+                                        },
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: '% of age group',
+                                        },
+                                        min: 0,
+                                    },
+                                },
+                                plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                            },
+                        });
+                        childBarChart.options.plugins.legend.display = true;
+
+                        // Create a bar chart using Chart.js for Child Data
+                        var ctxChild = document.getElementById('child-chart').getContext('2d');
+                        var childBarChart = new Chart(ctxChild, {
+                            type: 'line',
+                            plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                            data: {
+                                labels: years,
+                                datasets: [
+                                    {
+                                        label: 'Life limited a little',
+                                        data: aeiData2,
+                                        borderColor: '#679E38',
+                                        borderWidth: 2,
+                                        pointStyle: 'triangle',
+                                    },
+                                    {
+                                        label: 'Life limited a lot',
+                                        data: aeiData3,
+                                        borderColor: '#F69D4F',
+                                        borderWidth: 2,
+                                        pointStyle: 'triangle',
+                                    },
+                                ],
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Illness Data',
+                                    fontSize: 25,
+                                },
+                                scales: {
+                                    x: {
+                                        type: 'category',
+                                        labels: years,
+                                        grid: {
+                                            display: false,
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Year',
+                                        },
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: '% of age group',
+                                        },
+                                        min: 0, // Set the minimum value for the y-axis
+                                        max: 90, // Set the maximum value for the y-axis
+                                    },
+                                },
+                                plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                            },
+                        });
+                        childBarChart.options.plugins.legend.display = true;
+
+                        // Create a bar chart using Chart.js for Adult Data
+                        var ctxAdult = document.getElementById('adult-chart').getContext('2d');
+                        var adultBarChart = new Chart(ctxAdult, {
+                            type: 'line',
+                            plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                            data: {
+                                labels: adultYears,
+                                datasets: [
+                                {
+                                    label: 'Hypertension',
+                                    data: adultOverweightHypertensionData,
+                                    borderColor: '#F69D4F',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Obesity Register',
+                                    data: adultObeseObesityRegisterData,
+                                    borderColor: '#6C5B7B',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Asthma',
+                                    data: adultOverweightAsthmaData,
+                                    borderColor: '#58A4B0',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Diabetes Mellitus',
+                                    data: adultOverweightDiabetesMellitusData,
+                                    borderColor: '#FF6B6B',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Chronic Kidney Disease',
+                                    data: adultObeseChronicKidneyDiseaseData,
+                                    borderColor: '#625DFF',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Coronary Heart Disease',
+                                    data: adultOverweightCoronaryHeartDiseaseData,
+                                    borderColor: '#FFA07A',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Chronic Obstructive Pulmonary Disease',
+                                    data: adultOverweightChronicObstructivePulmonaryDiseaseData,
+                                    borderColor: '#F08080',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Atrial Fibrillation',
+                                    data: adultObeseAtrialFibrillationData,
+                                    borderColor: '#6A0572',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Stroke or Transient Ischaemic Attack',
+                                    data: adultOverweightStrokeOrTransientIschaemicAttackData,
+                                    borderColor: '#40916C',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Heart Failure',
+                                    data: adultOverweightHeartFailureData,
+                                    borderColor: '#3D348B',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Mental Health Issues',
+                                    data: adultOverweightMentalHealthIssuesData,
+                                    borderColor: '#FDCA40',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                },
+                                {
+                                    label: 'Dementia',
+                                    data: adultOverweightDementiaData,
+                                    borderColor: '#FF5722',
+                                    borderWidth: 1,
+                                    pointRadius: 0, // Set pointRadius to 0 to remove dots
+                                }
+
+
+                                ],
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Adult Obesity Data',
+                                    fontSize: 25,
+                                },
+                                scales: {
+                                    x: {
+                                        type: 'category',
+                                        labels: adultYears,
+                                        grid: {
+                                            display: false,
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Year',
+                                        },
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: '% of adult population',
+                                        },
+                                        min: 0,
+                                    },
+                                },
+                                plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                            },
+                        });
+                        adultBarChart.options.plugins.legend.display = true;
+
+                    } else {
+                        console.error('Failed to load data from the second API');
+                    }
+                };
+
+                xhrTwo.send();
+            } else {
+                console.error('Failed to load data from the first API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

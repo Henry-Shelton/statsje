@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        h4.tiles__title-h2 {
+            text-align: center;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <canvas id="line-chart"></canvas>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=8f48e871-a86e-4df7-bb49-38b0c8bef877';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Extract the data for the chart
+                var records = response.result.records;
+                var years = records.map(function (record) {
+                    var year = record.Year;
+                    return year;
+                });
+
+                var data1 = records.map(function (record) {
+                    return parseFloat(record["I have never smoked / I don’t smoke"]) * 100 + parseFloat(record["I used to smoke occasionally but don’t now"]) * 100 + parseFloat(record["I used to smoke daily but don’t now"]) * 100;
+                });
+                var data2 = records.map(function (record) {
+                    return parseFloat(record["I smoke occasionally but not everyday"]) * 100;
+                });
+                var data3 = records.map(function (record) {
+                    return parseFloat(record["I smoke daily"]) * 100;
+                });
+
+                // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                        {
+                            label: 'Dont Smoke',
+                            data: data1,
+                            borderColor: 'rgba(0, 128, 0, 1.0)', // Green with 50% transparency (alpha = 0.5)
+                            pointRadius: 0, // Set point radius to 0 to hide the data points
+                        },
+                        {
+                            label: 'Occasionally Smoke',
+                            data: data2,
+                            borderColor: 'rgba(255, 165, 0, 1.0)', // Orange with 100% transparency (alpha = 1.0)
+                            pointRadius: 0, // Set point radius to 0 to hide the data points
+                        },
+                        {
+                            label: 'Daily Smoker',
+                            data: data3,
+                            borderColor: 'red',
+                            pointRadius: 0, // Set point radius to 0 to hide the data points
+                        }
+
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Smoking Prevelance', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year', // X-axis title
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: '% Total Population', // Y-axis title
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sparkline Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="sparkline-chart"></canvas>
+    
+    <!-- Hidden div to store the last chart value -->
+    <div id="lastChartValue" style="display: none;"></div>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=07e4474f-14df-49e4-9ed8-695b4adfd3f4';
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+                var csvData = response.result.records;
+
+                // Extract the data for the sparkline chart
+                var years = csvData.map(function (row) {
+                    return row.Quarter;
+                });
+                var primaryData = csvData.map(function (row) {
+                    return parseFloat(row["Average price 2-bedroom houses"]);
+                });
+                var secondaryData = csvData.map(function (row) {
+                    return parseFloat(row["Average price 3-bedroom houses"]);
+                });
+                var tertiaryData = csvData.map(function (row) {
+                    return parseFloat(row["Average price 4-bedroom houses"]);
+                });
+
+                // Calculate the last values from each data set
+                var lastPrimaryValue = primaryData[primaryData.length - 1];
+                var lastSecondaryValue = secondaryData[secondaryData.length - 1];
+                var lastTertiaryValue = tertiaryData[tertiaryData.length - 1];
+
+                // Calculate the average of the last values
+                var averageLastValues = (lastPrimaryValue + lastSecondaryValue + lastTertiaryValue) / 3;
+
+                // Set the average as the lastChartValue
+                var lastChartValue = averageLastValues;
+
+                // Create a sparkline chart using Chart.js
+                var ctx = document.getElementById('sparkline-chart').getContext('2d');
+                var sparklineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years, // This sets the x-axis labels
+                        datasets: [
+                            {
+                                label: 'Primary Data',
+                                data: primaryData,
+                                borderColor: 'black',
+                                borderWidth: 2,
+                                fill: true,
+                            },
+                            {
+                                label: 'Secondary Data',
+                                data: secondaryData,
+                                borderColor: '#4B4B4B',
+                                borderWidth: 2,
+                                fill: true,
+                            },
+                            {
+                                label: 'Tertiary Data',
+                                data: tertiaryData,
+                                borderColor: '#8C8C8C',
+                                borderWidth: 2,
+                                fill: true,
+                            },
+                        ],
+                    },
+                    options: {
+                        elements: {
+                            point:{
+                                radius: 0
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                },
+                                ticks: {
+                                    maxRotation: 0, // Prevents label rotation
+                                    minRotation: 0, // Prevents label rotation
+                                    callback: function(value, index, values) {
+                                        // Show only the first and last x-axis labels
+                                        if (index === 0 || index === values.length - 1) {
+                                            return years[index];
+                                        } else {
+                                            return '';
+                                        }
+                                    }
+                                }
+                            },
+                            y: {
+                                display: false,
+                            },
+                        },
+                    },
+                });
+                
+            // Format the lastChartValue to two decimal places and store it in a variable
+            var averahehousepriceValue = parseFloat(lastChartValue).toFixed(0);
+
+            // Put the formatted value into the hidden div
+            document.getElementById('lastChartValue').textContent = 'Last Chart Value: ' + averahehousepriceValue;
+
+            // Send the formatted value to the parent window
+            window.parent.postMessage({ averahehousepriceValue: averahehousepriceValue }, '*');
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

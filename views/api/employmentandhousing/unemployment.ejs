@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        h4.tiles__title-h2 {
+            text-align: center;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <h4 class="tiles__title-h2">Total Unemployment</h4>
+    <canvas id="line-chart"></canvas>
+    <br><br>
+    <h4 class="tiles__title-h2">Total Unemployment by sex</h4>
+    <canvas id="ratio-chart"></canvas>
+    <div style="font-size: 14px; display: flex; justify-content: space-between; margin-bottom: 3em;">
+        <em style="margin-right: auto;">ASW = Actively Seeking Work</em>
+    </div>
+
+    <h4 class="tiles__title-h2">Total Unemployment by age</h4>
+    <canvas id="age-chart"></canvas>
+
+
+    
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https%3A%2F%2Fopendata.gov.je%2Fapi%2F3%2Faction%2Fdatastore_search%3Foffset%3D100%26resource_id%3D4264c50c-f524-4ade-a837-400c18814837';
+        var apiUrl2 = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=4264c50c-f524-4ade-a837-400c18814837';
+        var csvContainer = document.getElementById('csv-container');
+    
+    // First API request
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', apiUrl, true);
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            var response = JSON.parse(xhr.responseText);
+
+            // Extract the data for the chart
+            var records3 = response.result.records;
+
+            // Now, initiate the second API request
+            var xhr2 = new XMLHttpRequest();
+            xhr2.open('GET', apiUrl2, true);
+            xhr2.onload = function () {
+                if (xhr2.status >= 200 && xhr2.status < 300) {
+                    var response2 = JSON.parse(xhr2.responseText);
+
+                    // Extract data from the second API response as needed
+                    var records2 = response2.result.records;
+
+                    // Combine the records arrays from both API responses
+                    var records = records2.concat(records3);
+
+                        var years = records.map(function (record) {
+                            var fullDate = record.Date;
+                            var dateOnly = fullDate.split('T')[0];
+                            return dateOnly;
+                        });
+    
+
+                //chart1
+                var totalData = records.map(function (record) {
+                    return parseFloat(record["Total registered as ASW (non-seasonally adjusted)"]);
+                });
+
+                //chart2
+                var malesData = records.map(function (record) {
+                    return parseFloat(record["Males"]);
+                });
+                var femalesData = records.map(function (record) {
+                    return parseFloat(record["Females"]);
+                });
+
+                //chart3
+                var Data1 = records.map(function (record) {
+                    return parseFloat(record["Age: 16-19"]);
+                });
+                var Data2 = records.map(function (record) {
+                    return parseFloat(record["Age: 20-24"]);
+                });
+                var Data3 = records.map(function (record) {
+                    return parseFloat(record["Age: 25-29"]);
+                });
+                var Data4 = records.map(function (record) {
+                    return parseFloat(record["Age: 30-34"]);
+                });
+                var Data5 = records.map(function (record) {
+                    return parseFloat(record["Age: 35-39"]);
+                });
+                var Data6 = records.map(function (record) {
+                    return parseFloat(record["Age: 40-44"]);
+                });
+                var Data7 = records.map(function (record) {
+                    return parseFloat(record["Age: 45-49"]);
+                });
+                var Data8 = records.map(function (record) {
+                    return parseFloat(record["Age: 50-54"]);
+                });
+                var Data9 = records.map(function (record) {
+                    return parseFloat(record["Age: 55-59"]);
+                });
+                var Data10 = records.map(function (record) {
+                    return parseFloat(record["Age: 60-64"]);
+                });
+
+
+                // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                        {
+                            label: 'Total ASW',
+                            data: totalData,
+                            borderColor: 'grey',
+                            backgroundColor: 'rgba(0, 0, 255, 0.2)', // Set the fill color to blue with alpha transparency
+                            borderWidth: 1, // Set line width to 1
+                            fill: true, // Set fill to true
+                            pointRadius: 0, // Set point radius to 0 to hide the data points
+                        }
+
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Total employment', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year', // X-axis title
+                                },
+                            },
+                            y: {
+        title: {
+            display: true,
+            text: 'Headcount', // Y-axis title
+        },
+        suggestedMin: 0, // Set the minimum value of the y-axis to 0
+    },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+
+                // Create a separate chart for the ratio
+                    var ratioCtx = document.getElementById('ratio-chart').getContext('2d');
+                    var ratioChart = new Chart(ratioCtx, {
+                        type: 'line',
+                        plugins: [{
+                            afterDraw: chart => {
+                                if (chart.tooltip?._active?.length) {
+                                    let x = chart.tooltip._active[0].element.x;
+                                    let yAxis = chart.scales.y;
+                                    let ctx = chart.ctx;
+                                    ctx.save();
+                                    ctx.beginPath();
+                                    ctx.moveTo(x, yAxis.top);
+                                    ctx.lineTo(x, yAxis.bottom);
+                                    ctx.lineWidth = 2;
+                                    ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                    ctx.stroke();
+                                    ctx.restore();
+                                }
+                            }
+                        }],
+                        data: {
+                            labels: years,
+                            datasets: [
+                            {
+                                label: 'Males ASW',
+                                data: malesData,
+                                borderColor: 'darkblue',
+                                backgroundColor: 'rgba(0, 0, 255, 0.4)', // Set the fill color to blue with alpha transparency
+                                borderWidth: 1, // Set line width to 1
+                                fill: true, // Set fill to true
+                                pointRadius: 0, // Set point radius to 0 to hide the data points
+                            },
+                            {
+                                label: 'Females ASW',
+                                data: femalesData,
+                                borderColor: 'darkred',
+                                backgroundColor: 'rgba(255, 0, 0, 0.4)', // Set the fill color to red with alpha transparency
+                                borderWidth: 1, // Set line width to 1
+                                fill: true, // Set fill to true
+                                pointRadius: 0, // Set point radius to 0 to hide the data points
+                            }
+
+
+                            ],
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'Total employment', // Chart title
+                                fontSize: 25,
+                            },
+                            scales: {
+                                x: {
+                                    type: 'category',
+                                    labels: years,
+                                    grid: {
+                                        display: false,
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Year', // X-axis title
+                                    },
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Headcount', // Y-axis title
+                                    },
+                                },
+                            },
+                            plugins: {
+                                tooltip: {
+                                    mode: 'index',
+                                    intersect: false,
+                                },
+                            },
+                        },
+                    });
+                    ratioChart.options.plugins.legend.display = true;
+
+
+                    // Create a separate chart for the ratio
+                    var ageCtx = document.getElementById('age-chart').getContext('2d');
+                    var ageChart = new Chart(ageCtx, {
+                        type: 'line',
+                        plugins: [{
+                            afterDraw: chart => {
+                                if (chart.tooltip?._active?.length) {
+                                    let x = chart.tooltip._active[0].element.x;
+                                    let yAxis = chart.scales.y;
+                                    let ctx = chart.ctx;
+                                    ctx.save();
+                                    ctx.beginPath();
+                                    ctx.moveTo(x, yAxis.top);
+                                    ctx.lineTo(x, yAxis.bottom);
+                                    ctx.lineWidth = 2;
+                                    ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                    ctx.stroke();
+                                    ctx.restore();
+                                }
+                            }
+                        }],
+                        data: {
+                            labels: years,
+                            datasets: [
+                            { label: '16-19', data: Data1, borderColor: 'darkblue', borderWidth: 1, pointRadius: 0 },
+    { label: '20-24', data: Data2, borderColor: 'red', borderWidth: 1, pointRadius: 0 },
+    { label: '25-29', data: Data3, borderColor: 'green', borderWidth: 1, pointRadius: 0 },
+    { label: '30-34', data: Data4, borderColor: 'orange', borderWidth: 1, pointRadius: 0 },
+    { label: '35-39', data: Data5, borderColor: 'purple', borderWidth: 1, pointRadius: 0 },
+    { label: '40-44', data: Data6, borderColor: 'brown', borderWidth: 1, pointRadius: 0 },
+    { label: '45-49', data: Data7, borderColor: 'cyan', borderWidth: 1, pointRadius: 0 },
+    { label: '50-54', data: Data8, borderColor: 'magenta', borderWidth: 1, pointRadius: 0 },
+    { label: '55-59', data: Data9, borderColor: 'yellow', borderWidth: 1, pointRadius: 0 },
+    { label: '60-64', data: Data10, borderColor: 'black', borderWidth: 1, pointRadius: 0 }
+
+
+                            ],
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'Total employment', // Chart title
+                                fontSize: 25,
+                            },
+                            scales: {
+                                x: {
+                                    type: 'category',
+                                    labels: years,
+                                    grid: {
+                                        display: false,
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Year', // X-axis title
+                                    },
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Headcount', // Y-axis title
+                                    },
+                                },
+                            },
+                            plugins: {
+                                tooltip: {
+                                    mode: 'index',
+                                    intersect: false,
+                                },
+                            },
+                        },
+                    });
+                    ageChart.options.plugins.legend.display = true;
+
+                } else {
+                    console.error('Error fetching second API:', xhr2.statusText);
+                }
+            };
+
+            xhr2.send(); // Send the second API request
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        h4.tiles__title-h2 {
+            text-align: center;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+    
+    <h4 class="tiles__title-h2" style="text-align: center;">Total Annual Mortality (by sex)</h4>
+    <canvas id="illness-chart"></canvas>
+    <br><br>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=bb3cfffa-16d6-4131-8b6d-571ca0399d01';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+                var records = response.result.records;
+                var years = records.map(function (record) {
+                    var year = record["Year"];
+                    return year;
+                });
+
+                // Child Data
+
+                var aeiData = records.map(function (record) {
+                    return parseFloat(record["Total Deaths"]);
+                });
+
+                var aeiData2 = records.map(function (record) {
+                    return parseFloat(record["Total Male"]);
+                });
+
+                var aeiData3 = records.map(function (record) {
+                    return parseFloat(record["Total Female"]);
+                });
+
+                // Create a line chart using Chart.js for Total Annual Mortality
+                var ctxChild = document.getElementById('illness-chart').getContext('2d');
+                var childLineChart = new Chart(ctxChild, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: 'Total Deaths',
+                                data: aeiData,
+                                borderColor: 'red',
+                                borderWidth: 2,
+                                pointStyle: 'none',
+                            },
+                            {
+                                label: 'Total Male',
+                                data: aeiData2,
+                                borderColor: '#000371',
+                                borderWidth: 2,
+                                pointStyle: 'none',
+                            },
+                            {
+                                label: 'Total Female',
+                                data: aeiData3,
+                                borderColor: '#7F0079',
+                                borderWidth: 2,
+                                pointStyle: 'none',
+                            },
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Total Annual Mortality',
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year',
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Absolute Number',
+                                },
+                                min: 0,
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+            } else {
+                console.error('Failed to load data from the first API');
+            }
+        };
+
+        xhr.send();
+    </script>
+
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+    
+    <h4 class="tiles__title-h2">Median Age of Death (by sex)</h4>
+    <canvas id="child-chart"></canvas>
+    <br><br>
+
+    <script>
+        var apiUrlTwo = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=1400c4fc-58d7-4f1a-a9ac-3a4eb3dc1cf3';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhrTwo = new XMLHttpRequest();
+        xhrTwo.open('GET', apiUrlTwo, true);
+
+        xhrTwo.onload = function () {
+            if (xhrTwo.status >= 200 && xhrTwo.status < 300) {
+                var responseTwo = JSON.parse(xhrTwo.responseText);
+                var recordsTwo = responseTwo.result.records;
+
+                // Adult Data
+                var adultYears = recordsTwo.map(function (record) {
+                    var year = record["Year"];
+                    return year;
+                });
+
+                var aeiData6 = recordsTwo.map(function (record) {
+                    return parseFloat(record["Male"]);
+                });
+                var aeiData5 = recordsTwo.map(function (record) {
+                    return parseFloat(record["Female"]);
+                });
+                var aeiData4 = recordsTwo.map(function (record) {
+                    return parseFloat(record["All"]);
+                });
+
+                // Create a line chart using Chart.js for Median Age of Death
+                var ctxChild = document.getElementById('child-chart').getContext('2d');
+                var childLineChart = new Chart(ctxChild, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: adultYears,
+                        datasets: [
+                            {
+                                label: 'Male',
+                                data: aeiData6,
+                                borderColor: '#000371',
+                                borderWidth: 2,
+                                pointStyle: 'none',
+                            },
+                            {
+                                label: 'Female',
+                                data: aeiData5,
+                                borderColor: '#7F0079',
+                                borderWidth: 2,
+                                pointStyle: 'none',
+                            },
+                            {
+                                label: 'All',
+                                data: aeiData4,
+                                borderColor: 'red',
+                                borderWidth: 2,
+                                pointStyle: 'none',
+                            },
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Median Age of Death',
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: adultYears,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year',
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: '% of age group',
+                                },
+                                min: 70, // Set the minimum value
+                                max: 90, // Set the maximum value
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+            } else {
+                console.error('Failed to load data from the second API');
+            }
+        };
+
+        xhrTwo.send();
+    </script>
+
+</body>
+</html>

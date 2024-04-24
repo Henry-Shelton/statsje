@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Population Pyramid Sparkline</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="population-pyramid-sparkline"></canvas>
+
+    <script>
+        var apiUrl = 'https://stats.je/api/populationandsociety/populationpyramiddata';
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+                var csvData = response.result.records;
+
+                // Extract the data for the population pyramid sparkline
+                var ageData = csvData.map(function (record) {
+                    return parseInt(record.Age);
+                });
+                var maleData = csvData.map(function (record) {
+                    return parseFloat(record.Population);
+                });
+                var femaleData = csvData.map(function (record) {
+                    return -parseFloat(record.Population); // Use negative values for females
+                });
+
+                // Create a non-interactive sparkline chart for the population pyramid using Chart.js
+                var ctx = document.getElementById('population-pyramid-sparkline').getContext('2d');
+                var sparklineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ageData,
+                        datasets: [
+                            {
+                                data: maleData,
+                                borderColor: 'black',
+                                borderWidth: 2,
+                                fill: true,
+                                pointRadius: 0, // Disable point radius for this dataset
+                            },
+                            {
+                                data: femaleData,
+                                borderColor: 'black',
+                                borderWidth: 2,
+                                fill: true,
+                                pointRadius: 0, // Disable point radius for this dataset
+                            },
+                        ],
+                    },
+                    options: {
+                        interaction: {
+                            mode: 'nearest',
+                            axis: 'x',
+                            intersect: false,
+                        },
+                        elements: {
+                            point: {
+                                radius: 0,
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: false // Disable the tooltip
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: false,
+                            },
+                            y: {
+                                display: false,
+                            },
+                        },
+                    },
+                });
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

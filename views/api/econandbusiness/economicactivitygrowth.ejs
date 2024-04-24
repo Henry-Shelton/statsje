@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <canvas id="line-chart"></canvas>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=b70de576-be1f-4469-97c4-f4a6ebe43dee';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Extract the data for the chart
+                var records = response.result.records;
+                var labels = records.map(function (record) {
+                    var year = record.Year;
+                    var quarter = record.Quarter; // Assuming "Quarters" is the name of the quarter column
+                    return year + " Q" + quarter;
+                });
+                var activityData = records.map(function (record) {
+                    return parseFloat(record["Business Activity"]);
+                });
+                var newbusinessData = records.map(function (record) {
+                    return parseFloat(record["New Business"]);
+                });
+                var capacityData = records.map(function (record) {
+                    return parseFloat(record["Capacity Utilisation"]);
+                });
+
+                // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Business Activity',
+                                data: activityData,
+                                borderColor: 'black',
+                                fill: false,
+                                pointRadius: 0, // Set point radius to 0 to hide the data points
+                            },
+                            {
+                                label: 'New Business',
+                                data: newbusinessData,
+                                borderColor: 'blue',
+                                fill: false,
+                                pointRadius: 0, // Set point radius to 0 to hide the data points
+                            },
+                            {
+                                label: 'Capacity Utilisation',
+                                data: capacityData,
+                                borderColor: 'green',
+                                fill: false,
+                                pointRadius: 0, // Set point radius to 0 to hide the data points
+                            },
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Economic Activity + Growth metrics', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: labels,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year and Quarter', // X-axis title
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Weighted net balance', // Y-axis title
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

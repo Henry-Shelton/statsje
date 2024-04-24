@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <canvas id="line-chart"></canvas>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=15a770c8-6986-4e17-93a6-ddbc3a5b9d28';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Extract the data for the chart
+                var records = response.result.records;
+                var years = records.map(function (record) {
+                    var year = record.Year;
+                    var month = record.Month; // Assuming "Quarters" is the name of the quarter column
+                    return month + " " + year;
+                });
+                var ManufacturingData = records.map(function (record) {
+                    return parseFloat(record["Manufacturing"]);
+                });
+                var whosaleretailData = records.map(function (record) {
+                    return parseFloat(record["Wholesale and retail"]);
+                });
+                var hotelsData = records.map(function (record) {
+                    return parseFloat(record["Hotels, restaurants and bars"]);
+                });
+
+                // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                        {
+                            label: 'Manufacturing',
+                            data: ManufacturingData,
+                            borderColor: '#EAC400',
+                            pointRadius: 0, // Set point radius to 0 to hide the data points
+                        },
+                        {
+                            label: 'Wholesale and retail',
+                            data: whosaleretailData,
+                            borderColor: '#BFA000',
+                            pointRadius: 0, // Set point radius to 0 to hide the data points
+                        },
+                        {
+                            label: 'Hotels, restaurants and bars',
+                            data: hotelsData,
+                            borderColor: '#947C00',
+                            pointRadius: 0, // Set point radius to 0 to hide the data points
+                        }
+
+
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Secondary industry sectors', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year', // X-axis title
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Headcount', // Y-axis title
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

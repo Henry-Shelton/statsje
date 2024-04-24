@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <canvas id="line-chart"></canvas>
+
+    <script>
+
+    var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=d4257e5e-7fb8-455a-b155-b5802ad25acb';
+    var apiUrlTwo = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=07e4474f-14df-49e4-9ed8-695b4adfd3f4';
+    var csvContainer = document.getElementById('csv-container');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', apiUrl, true);
+
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            var response = JSON.parse(xhr.responseText);
+
+            // Extract the data from the first API
+            var records = response.result.records;
+            var years = records.map(function (record) {
+                var year = record["Year (June)"]; // Update the column name
+                return year;
+            });
+            var aeiData = records.map(function (record) {
+                return parseFloat(record["Index number"]);
+            });
+
+            // Now, make a request to the second API
+            var xhrTwo = new XMLHttpRequest();
+            xhrTwo.open('GET', apiUrlTwo, true);
+
+            xhrTwo.onload = function () {
+                if (xhrTwo.status >= 200 && xhrTwo.status < 300) {
+                    var responseTwo = JSON.parse(xhrTwo.responseText);
+
+                    // Extract the data from the second API
+                    var recordsTwo = responseTwo.result.records;
+                    var hpiData = recordsTwo.map(function (record) {
+                        return record["House Price Index (seasonally adjusted)"];
+                    });
+
+                                    // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: 'Average Earnings Index',
+                                data: aeiData,
+                                borderColor: 'rgba(0, 128, 0, 0.5)', // Green with 50% transparency
+                                borderWidth: 1, // Set line width to 1
+                                pointRadius: 0, // Set point radius to 0 to remove data point circles
+                            },
+                            {
+                                label: 'House Price Index',
+                                data: hpiData,
+                                borderColor: 'rgba(139, 0, 0, 0.5)', // Red with 50% transparency
+                                borderWidth: 1, // Set line width to 1
+                                pointRadius: 0, // Set point radius to 0 to remove data point circles
+                            },
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'House Price Index (seasonally adjusted)', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year', // X-axis title
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'HPI', // Y-axis title
+                                },
+                                max: 170,
+                                min: 90, // Set a custom minimum value (e.g., 250)
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+                } else {
+                    console.error('Failed to load data from the second API');
+                }
+            };
+
+            xhrTwo.send();
+        } else {
+            console.error('Failed to load data from the first API');
+        }
+    };
+
+    xhr.send();
+
+    </script>
+</body>
+</html>

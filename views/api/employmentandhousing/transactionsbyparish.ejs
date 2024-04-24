@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Parish GVA Data</title>
+  <style>
+    #json-container {
+      display: none;
+    }
+
+    #csv-container {
+      display: none;
+    }
+
+    .chart-container {
+      margin-bottom: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 80%;
+      margin: 20px auto;
+      font-family: Arial, sans-serif;
+      border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      text-align: left;
+      padding: 12px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr.parish-row {
+      background-color: #f2f2f2; /* Grey background color for parish rows */
+      font-weight: bold; /* Bold font for parish names */
+    }
+
+    .percentage-change-row td {
+      text-align: center;
+    }
+
+    .positive-change {
+      color: green;
+    }
+
+    .negative-change {
+      color: red;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+  <div class="chart-container">
+    <canvas id="bar-chart"></canvas>
+  </div>
+
+  <table id="percentage-change-table">
+    <tbody>
+      <!-- Data will be inserted here dynamically -->
+    </tbody>
+  </table>
+
+  <script>
+    var apiUrl =
+      'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=c6b73cd1-1d2c-40b3-a627-efbde6dea55b';
+    var csvContainer = document.getElementById('csv-container');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', apiUrl, true);
+
+    xhr.onload = function () {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        var response = JSON.parse(xhr.responseText);
+
+        // Extract the data for the last row and current row
+        var records = response.result.records;
+        var lastRow = records[records.length - 1];
+        var currentRow = records[records.length - 2];
+
+        // Get column names excluding columns starting with an underscore and "Year"
+        var columnNames = Object.keys(lastRow).filter(function (column) {
+          return !column.startsWith('_') && column !== 'Year' && column !== 'All Parishes';
+        });
+
+        // Extract values for the last row and current row excluding columns starting with an underscore and "Year"
+        var lastRowValues = columnNames.map(function (column) {
+          return parseFloat(lastRow[column]);
+        });
+
+        var currentRowValues = columnNames.map(function (column) {
+          return parseFloat(currentRow[column]);
+        });
+
+        // Define a custom color scheme for better visibility
+        var customColors = [
+          '#4CAF50',
+          '#2196F3',
+          '#FFC107',
+          '#9C27B0',
+          '#FF5722',
+          '#00BCD4',
+          '#673AB7',
+          '#E91E63',
+          '#FF9800',
+          '#3F51B5',
+        ];
+
+        // Create a bar chart using Chart.js
+        var ctx = document.getElementById('bar-chart').getContext('2d');
+        var barChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: columnNames,
+            datasets: [
+              {
+                label: currentRow['Year'],
+                data: currentRowValues,
+                backgroundColor: customColors.map((color) => color + '80'),
+                borderWidth: 1,
+              },
+              {
+                label: lastRow['Year'],
+                data: lastRowValues,
+                backgroundColor: customColors,
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: 'category',
+                title: {
+                  display: true,
+                  text: 'Parish',
+                },
+              },
+              y: {
+                type: 'logarithmic', // Set the y-axis to logarithmic scale
+                title: {
+                  display: true,
+                  text: 'Number of Property Transactions (log scale)',
+                },
+              },
+            },
+          },
+        });
+
+        // Populate the table dynamically with parish and percentage change
+        var tableBody = document.getElementById('percentage-change-table').getElementsByTagName('tbody')[0];
+
+        for (var i = 0; i < columnNames.length; i += 6) {
+          // Insert parishes
+          var parishRow = document.createElement('tr');
+          parishRow.classList.add('parish-row'); // Add the parish-row class
+          for (var j = 0; j < 6; j++) {
+            var index = i + j;
+            if (index < columnNames.length) {
+              var parishCell = document.createElement('td');
+              parishCell.textContent = columnNames[index];
+              parishRow.appendChild(parishCell);
+            }
+          }
+          tableBody.appendChild(parishRow);
+
+          // Insert percentage changes
+          var percentageChangeRow = document.createElement('tr');
+          for (var j = 0; j < 6; j++) {
+            var index = i + j;
+            if (index < columnNames.length) {
+              var valueLastQuarter = lastRowValues[index];
+              var valueCurrentQuarter = currentRowValues[index];
+              var percentageChange = (
+                ((valueCurrentQuarter - valueLastQuarter) / Math.abs(valueLastQuarter)) *
+                100
+              ).toFixed(2);
+              var changeSymbol = percentageChange >= 0 ? '-' : '+';
+              var changeColorClass = percentageChange >= 0 ? 'negative-change' : 'positive-change';
+
+              var percentageChangeCell = document.createElement('td');
+              percentageChangeCell.classList.add(changeColorClass);
+              percentageChangeCell.textContent = `${changeSymbol}${Math.abs(percentageChange)}%`;
+
+              percentageChangeRow.appendChild(percentageChangeCell);
+            }
+          }
+          tableBody.appendChild(percentageChangeRow);
+        }
+      } else {
+        console.error('Failed to fetch data from the API');
+      }
+    };
+
+    xhr.send();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Raw JSON Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        #chart-and-table {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        #line-chart {
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%; /* Adjust the width as needed */
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            border: 1px solid #ddd;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+        
+    <div id="error-message" style="text-align: center; color: red; font-size: 24px; font-weight: bold; font-family: monospace, Arial;"></div>
+
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <div id="chart-and-table">
+        <canvas id="line-chart"></canvas>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Time Period</th>
+                    <th>Absolute Change (GBP £)</th>
+                    <th>Percentage Change</th>
+                </tr>
+            </thead>
+            <tbody id="gdpPerCapitaChangesTableBody">
+                <!-- Changes will be displayed here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        var gdpApiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=ae620bf3-41be-4461-adb8-2220ab7cb000';
+        var populationApiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=75c9a5ed-e95e-4052-a7c8-96d5dab8a64a';
+
+        // Function to fetch data from the API
+        function fetchData(apiUrl, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', apiUrl, true);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    var response = JSON.parse(xhr.responseText);
+                    callback(response);
+                } else {
+                // Handle the error condition
+                var errorMessage = 'Rate limit exceeded. Please refresh shortly.';
+                displayError(errorMessage);
+            }
+        }; 
+
+        xhr.onerror = function() {
+            // Handle network errors
+            var errorMessage = 'Network error occurred while fetching data';
+            displayError(errorMessage);
+        };
+
+        xhr.send();
+
+        function displayError(message) {
+
+            // Show the error message
+            var errorContainer = document.getElementById('error-message');
+            errorContainer.textContent = message;
+        }
+        }
+
+        // Fetch GDP data
+        fetchData(gdpApiUrl, function (gdpResponse) {
+            // Fetch population data
+            fetchData(populationApiUrl, function (populationResponse) {
+                // Convert GDP JSON data to CSV format
+                var gdpCsv = jsonToCsv(gdpResponse);
+
+                // Parse the CSV data
+                var gdpCsvData = parseCSV(gdpCsv);
+
+                // Convert population JSON data to CSV format
+                var populationCsv = jsonToCsv(populationResponse);
+
+                // Parse the CSV data
+                var populationCsvData = parseCSV(populationCsv);
+
+                // Merge GDP and population data based on the common "Year" column
+                var mergedData = mergeData(gdpCsvData, populationCsvData);
+
+                // Calculate GDP per capita
+                mergedData.forEach(function (row) {
+                    row.GDP_per_capita = parseFloat(row.GDP) / parseFloat(row["End of year population estimate"]);
+                });
+
+                // Extract the data for the chart
+                var years = mergedData.map(function (row) {
+                    return row.Year;
+                });
+                var gdpPerCapitaValues = mergedData.map(function (row) {
+                    // Multiply the GDP per capita values by 1000
+                    return parseFloat(row.GDP_per_capita) * 1000000;
+                });
+
+                // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [{
+                            label: 'GDP per capita',
+                            data: gdpPerCapitaValues,
+                            borderColor: 'black',
+                            fill: false,
+                        }],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'GDP Per Capita Over the Years', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year', // X-axis title
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'GDP per capita (GBP £)', // Y-axis title
+                                },
+                                ticks: {
+                                    callback: function (value) {
+                                        // Format y-axis labels with 5 significant figures
+                                        return value.toPrecision(5);
+                                    }
+                                }
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = false; // Hide the legend
+
+                // Display the changes in the table
+                displayChangesTable(gdpPerCapitaValues);
+            });
+        });
+
+        // Function to display changes in the table
+        function displayChangesTable(data) {
+            var gdpPerCapitaChangesTableBody = document.getElementById('gdpPerCapitaChangesTableBody');
+
+            // Calculate 1-year change, 5-year change, and change since records began
+            var oneYearChange = calculatePercentageChange(data[data.length - 2], data[data.length - 1]);
+            var fiveYearChange = calculatePercentageChange(data[data.length - 6], data[data.length - 1]);
+            var changeSinceRecordsBegan = calculatePercentageChange(data[0], data[data.length - 1]);
+            var absoluteOneYearChange = data[data.length - 1] - data[data.length - 2];
+            var absoluteFiveYearChange = data[data.length - 1] - data[data.length - 6];
+            var absoluteChangeSinceRecordsBegan = data[data.length - 1] - data[0];
+
+            // Display the changes in the table
+            appendTableRow("1-Year Change", absoluteOneYearChange, oneYearChange);
+            appendTableRow("5-Year Change", absoluteFiveYearChange, fiveYearChange);
+            appendTableRow("Change Since 2012", absoluteChangeSinceRecordsBegan, changeSinceRecordsBegan);
+        }
+
+        // Function to append a table row with the calculated changes
+        function appendTableRow(timePeriod, absoluteChange, percentageChange) {
+            var gdpPerCapitaChangesTableBody = document.getElementById('gdpPerCapitaChangesTableBody');
+            var newRow = gdpPerCapitaChangesTableBody.insertRow();
+            newRow.innerHTML = `<td>${timePeriod}</td><td>${absoluteChange.toFixed(2)}</td><td>${percentageChange.toFixed(2)}%</td>`;
+            applyBackgroundStyle(newRow.cells[2], percentageChange); // Apply background style to percentage change cell
+        }
+
+        // Function to calculate percentage change
+        function calculatePercentageChange(startValue, endValue) {
+            return ((endValue - startValue) / Math.abs(startValue)) * 100;
+        }
+
+        // Function to apply background style based on percentage change
+        function applyBackgroundStyle(cell, percentageChange) {
+            var maxPercentage = 20; // Maximum percentage for the gradient scale
+            var minColor = [152, 251, 152]; // Lighter green (RGB values)
+            var maxColor = [0, 128, 0]; // Darker green (RGB values)
+
+            // Calculate the color based on the percentage change
+            var color = calculateGradientColor(minColor, maxColor, Math.min(Math.abs(percentageChange), maxPercentage) / maxPercentage);
+
+            cell.style.backgroundColor = 'rgb(' + color.join(',') + ')';
+            cell.style.color = 'black'; // Black text
+        }
+
+        // Function to calculate gradient color
+        function calculateGradientColor(startColor, endColor, percentage) {
+            var color = [];
+            for (var i = 0; i < 3; i++) {
+                color[i] = Math.round(startColor[i] + percentage * (endColor[i] - startColor[i]));
+            }
+            return color;
+        }
+
+        function jsonToCsv(data) {
+            var csv = '';
+            var keys = Object.keys(data.result.records[0]);
+
+            // Create the header row
+            csv += keys.join(',') + '\n';
+
+            // Create the data rows
+            data.result.records.forEach(function (record) {
+                var values = keys.map(function (key) {
+                    return record[key];
+                });
+                csv += values.join(',') + '\n';
+            });
+
+            return csv;
+        }
+
+        function parseCSV(csv) {
+            var lines = csv.trim().split('\n');
+            var result = [];
+            var headers = lines[0].split(',');
+
+            for (var i = 1; i < lines.length; i++) {
+                var obj = {};
+                var currentline = lines[i].split(',');
+
+                for (var j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = currentline[j];
+                }
+
+                result.push(obj);
+            }
+
+            return result;
+        }
+
+        // Function to merge data based on a common column (in this case, "Year")
+        function mergeData(data1, data2) {
+            return data1.map(function (row1) {
+                var matchingRow = data2.find(function (row2) {
+                    return row1.Year === row2.Year;
+                });
+
+                return Object.assign({}, row1, matchingRow);
+            });
+        }
+    </script>
+</body>
+</html>

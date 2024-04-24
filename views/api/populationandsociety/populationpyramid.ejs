@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Population Pyramid</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <canvas id="population-pyramid"></canvas>
+
+    <script>
+        var apiUrl = 'https://stats.je/api/populationandsociety/populationpyramiddata';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Filter and extract male and female data
+                var maleData = response.result.records.filter(function (record) {
+                    return record.Sex === "Male";
+                });
+
+                var femaleData = response.result.records.filter(function (record) {
+                    return record.Sex === "Female";
+                });
+
+                // Extract the age and population data for males and females
+                var ageMale = maleData.map(function (record) {
+                    return parseInt(record.Age); // Parse age as an integer
+                });
+
+                var populationMale = maleData.map(function (record) {
+                    return -parseFloat(record.Population); // Use negative values for males
+                });
+
+                var ageFemale = femaleData.map(function (record) {
+                    return parseInt(record.Age); // Parse age as an integer
+                });
+
+                var populationFemale = femaleData.map(function (record) {
+                    return parseFloat(record.Population);
+                });
+
+                // Combine male and female data for the population pyramid
+                var ageData = ageMale.concat(ageFemale);
+                var populationData = populationMale.concat(populationFemale);
+
+                var populationDifference = populationMale.map((value, index) => value + populationFemale[index]);
+
+                // Create a population pyramid using Chart.js
+                var ctx = document.getElementById('population-pyramid').getContext('2d');
+                var pyramidChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            let ctx = chart.ctx;
+
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+
+                            let x50 = chart.scales.x.getPixelForValue(43);
+                            let yAxisZero = chart.scales.y.getPixelForValue(0);
+
+                            // Draw vertical line at x=39
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.moveTo(x50, chart.chartArea.top);
+                            ctx.lineTo(x50, chart.chartArea.bottom);
+                            ctx.lineWidth = 2;
+                            ctx.strokeStyle = 'black';
+                            ctx.stroke();
+                            ctx.restore();
+
+                            ctx.save();
+                            ctx.fillStyle = 'black';
+                            ctx.font = 'bold 12px Arial';
+                            ctx.fillText('43', x50 - 20, chart.chartArea.bottom - 10); // Adjust the position as needed
+                            ctx.restore();
+
+                            // Draw dashed horizontal line at y=0
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.setLineDash([1, 5]); // Set the line to be dashed
+                            ctx.moveTo(chart.chartArea.left, yAxisZero);
+                            ctx.lineTo(chart.chartArea.right, yAxisZero);
+                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = 'black';
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                    }],
+                    data: {
+                        labels: ageData,
+                        datasets: [
+                            {
+                                label: 'Female Population',
+                                data: populationFemale,
+                                borderColor: 'pink',
+                                backgroundColor: 'rgba(255, 192, 203, 0.2)', // Fill color for females
+                                fill: 'origin', // Fill from the origin to the line
+                            },
+                            {
+                                label: 'Male Population',
+                                data: populationMale,
+                                borderColor: 'blue',
+                                backgroundColor: 'rgba(0, 0, 255, 0.2)', // Fill color for males
+                                fill: 'origin', // Fill from the origin to the line
+                            },
+                            {
+                                label: 'M/F Difference',
+                                data: populationDifference,
+                                borderColor: 'green', // Choose a color for the difference line
+                                backgroundColor: 'rgba(0, 255, 0, 0.2)', // Choose a fill color for the difference area
+                                fill: 'origin',
+                                borderWidth: 1, // Set the width of the line
+                                pointRadius: 0, // Hide the points
+
+                            },
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Population Pyramid',
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: {
+                                    display: true,
+                                    text: 'Age',
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Population',
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            legend: {
+                                display: true,
+                            },
+                        },
+                    },
+                });
+
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

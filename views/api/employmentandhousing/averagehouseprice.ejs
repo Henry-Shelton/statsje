@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Total GVA Data</title>
+    <style>
+        #json-container {
+            display: none; /* Hide the JSON container */
+        }
+        #csv-container {
+            display: none; /* Hide the CSV container */
+        }
+        .chart-container {
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            border: 1px solid #ddd;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .positive {
+            color: green;
+        }
+        .negative {
+            color: red;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <pre id="json-container">
+        <!-- JSON data will be displayed here -->
+    </pre>
+
+    <div class="chart-container">
+        <canvas id="line-chart"></canvas>
+    </div>
+
+    <table id="quarterly-change-table">
+        <thead>
+            <tr>
+                <th>Property Type</th>
+                <th>Quarterly Change</th>
+                <th>Yearly Change</th>
+                <th>5-Year Change</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Only the latest quarterly change data will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        var apiUrl = 'https://stats.je/proxy?targetUrl=https://opendata.gov.je/api/3/action/datastore_search?resource_id=07e4474f-14df-49e4-9ed8-695b4adfd3f4';
+        var csvContainer = document.getElementById('csv-container');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', apiUrl, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Extract the data for the chart
+                var records = response.result.records;
+                var years = records.map(function (record) {
+                    var year = record.Quarter;
+                    return year;
+                });
+                var transportData = records.map(function (record) {
+                    return parseFloat(record["Average price 1-bedroom flats"]);
+                });
+                var infoData = records.map(function (record) {
+                    return parseFloat(record["Average price 2-bedroom flats"]);
+                });
+                var finData = records.map(function (record) {
+                    return parseFloat(record["Average price 2-bedroom houses"]);
+                });
+                var miscData = records.map(function (record) {
+                    return parseFloat(record["Average price 3-bedroom houses"]);
+                });
+                var eduData = records.map(function (record) {
+                    return parseFloat(record["Average price 4-bedroom houses"]);
+                });
+
+                // Create a line chart using Chart.js
+                var ctx = document.getElementById('line-chart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+                    type: 'line',
+                    plugins: [{
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let x = chart.tooltip._active[0].element.x;
+                                let yAxis = chart.scales.y;
+                                let ctx = chart.ctx;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, yAxis.top);
+                                ctx.lineTo(x, yAxis.bottom);
+                                ctx.lineWidth = 2;
+                                ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }],
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: '1-bedroom flats',
+                                data: transportData,
+                                borderColor: '#C38BD2',
+                                pointRadius: 0, // Set point radius to 0 to hide the data points
+                            },
+                            {
+                                label: '2-bedroom flats',
+                                data: infoData,
+                                borderColor: '#A856BD',
+                                pointRadius: 0, // Set point radius to 0 to hide the data points
+                            },
+                            {
+                                label: '2-bedroom houses',
+                                data: finData,
+                                borderColor: '#84CEF2',
+                                pointRadius: 0, // Set point radius to 0 to hide the data points
+                            },
+                            {
+                                label: '3-bedroom houses',
+                                data: miscData,
+                                borderColor: '#40B2EA',
+                                pointRadius: 0, // Set point radius to 0 to hide the data points
+                            },
+                            {
+                                label: '4-bedroom houses',
+                                data: eduData,
+                                borderColor: '#0499E3',
+                                pointRadius: 0, // Set point radius to 0 to hide the data points
+                            }
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Secondary industry sectors', // Chart title
+                            fontSize: 25,
+                        },
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: years,
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Year', // X-axis title
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Value (£ thousands)', // Y-axis title
+                                },
+                            },
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                        },
+                    },
+                });
+                lineChart.options.plugins.legend.display = true; // Show the legend
+
+                // Calculate the latest quarterly changes
+                var latestQuarterChangeFlats = {
+                    '1-bedroom flats': ((transportData[records.length - 1] - transportData[records.length - 2]) / transportData[records.length - 2]) * 100,
+                    '2-bedroom flats': ((infoData[records.length - 1] - infoData[records.length - 2]) / infoData[records.length - 2]) * 100,
+                };
+                var latestQuarterChangeHouses = {
+                    '2-bedroom houses': ((finData[records.length - 1] - finData[records.length - 2]) / finData[records.length - 2]) * 100,
+                    '3-bedroom houses': ((miscData[records.length - 1] - miscData[records.length - 2]) / miscData[records.length - 2]) * 100,
+                    '4-bedroom houses': ((eduData[records.length - 1] - eduData[records.length - 2]) / eduData[records.length - 2]) * 100,
+                };
+
+                // Calculate the yearly changes
+                var yearlyChangeFlats = {
+                    '1-bedroom flats': ((transportData[records.length - 1] - transportData[records.length - 5]) / transportData[records.length - 5]) * 100,
+                    '2-bedroom flats': ((infoData[records.length - 1] - infoData[records.length - 5]) / infoData[records.length - 5]) * 100,
+                };
+                var yearlyChangeHouses = {
+                    '2-bedroom houses': ((finData[records.length - 1] - finData[records.length - 5]) / finData[records.length - 5]) * 100,
+                    '3-bedroom houses': ((miscData[records.length - 1] - miscData[records.length - 5]) / miscData[records.length - 5]) * 100,
+                    '4-bedroom houses': ((eduData[records.length - 1] - eduData[records.length - 5]) / eduData[records.length - 5]) * 100,
+                };
+
+                // Calculate the 5-year changes
+                var fiveYearChangeFlats = {
+                    '1-bedroom flats': ((transportData[records.length - 1] - transportData[records.length - 20]) / transportData[records.length - 20]) * 100,
+                    '2-bedroom flats': ((infoData[records.length - 1] - infoData[records.length - 20]) / infoData[records.length - 20]) * 100,
+                };
+                var fiveYearChangeHouses = {
+                    '2-bedroom houses': ((finData[records.length - 1] - finData[records.length - 20]) / finData[records.length - 20]) * 100,
+                    '3-bedroom houses': ((miscData[records.length - 1] - miscData[records.length - 20]) / miscData[records.length - 20]) * 100,
+                    '4-bedroom houses': ((eduData[records.length - 1] - eduData[records.length - 20]) / eduData[records.length - 20]) * 100,
+                };
+
+                // Display the latest quarterly changes, yearly changes, and 5-year changes in the table
+                var tableBody = document.getElementById('quarterly-change-table').getElementsByTagName('tbody')[0];
+
+                function addRowToTable(rowData, cell1Text, cell2Value, cell3Value, cell4Value) {
+                    var row = tableBody.insertRow(-1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+
+                    cell1.textContent = cell1Text;
+                    cell2.textContent = typeof cell2Value === 'number' && !isNaN(cell2Value) ? cell2Value.toFixed(2) + '%' : cell2Value;
+                    cell3.textContent = typeof cell3Value === 'number' && !isNaN(cell3Value) ? cell3Value.toFixed(2) + '%' : cell3Value;
+                    cell4.textContent = typeof cell4Value === 'number' && !isNaN(cell4Value) ? cell4Value.toFixed(2) + '%' : cell4Value;
+
+                    // Apply coloring based on positive/negative values
+                    cell2.style.backgroundColor = getBackgroundColor(cell2Value);
+                    cell3.style.backgroundColor = getBackgroundColor(cell3Value);
+                    cell4.style.backgroundColor = getBackgroundColor(cell4Value);
+                }
+
+                function getBackgroundColor(value) {
+                    if (value > 0) {
+                        // Calculate intensity for positive values (green)
+                        return 'rgba(0, 255, 0, ' + (value / 100) + ')';
+                    } else if (value < 0) {
+                        // Calculate intensity for negative values (red)
+                        return 'rgba(255, 0, 0, ' + (-value / 100) + ')';
+                    } else {
+                        // Neutral (grey)
+                        return 'lightgrey';
+                    }
+                }
+
+                // Add rows for latestQuarterChangeFlats
+                Object.entries(latestQuarterChangeFlats).forEach(function ([key, value]) {
+                    addRowToTable(latestQuarterChangeFlats, key, value, yearlyChangeFlats[key], fiveYearChangeFlats[key]);
+                });
+
+                // Add rows for latestQuarterChangeHouses
+                Object.entries(latestQuarterChangeHouses).forEach(function ([key, value]) {
+                    addRowToTable(latestQuarterChangeHouses, key, value, yearlyChangeHouses[key], fiveYearChangeHouses[key]);
+                });
+
+            } else {
+                console.error('Failed to fetch data from the API');
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>
