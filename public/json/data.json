@@ -1,0 +1,93 @@
+[
+  {
+    "indicator_value": "GDP (current US$)",
+    "country_name": "Channel Islands",
+    "latest_gdp_value": 11735662219.7772,
+    "date_value": "2021",
+    "latest_gdp_growth_value": 8.64676971657032,
+    "latest_gdp_per_capita_value": 67960.7269955768,
+    "latest_unemployment_value": 6.916,
+    "latest_inflation_value": null,
+    "latest_labor_force_participation_value": 58.814,
+    "latest_employment_to_population_ratio_value": 54.746,
+    "latest_total_population_value": 174079
+  },
+  {
+    "indicator_value": "GDP (current US$)",
+    "country_name": "UK",
+    "latest_gdp_value": 3070667732359.21,
+    "date_value": "2022",
+    "latest_gdp_growth_value": 4.10162138081358,
+    "latest_gdp_per_capita_value": 45850.4261222629,
+    "latest_unemployment_value": 3.571,
+    "latest_inflation_value": 7.92204883147916,
+    "latest_labor_force_participation_value": 62.345,
+    "latest_employment_to_population_ratio_value": 60.118,
+    "latest_total_population_value": 66971411
+  },
+  {
+    "indicator_value": "GDP (current US$)",
+    "country_name": "France",
+    "latest_gdp_value": 2782905325624.52,
+    "date_value": "2022",
+    "latest_gdp_growth_value": 2.5623935644647,
+    "latest_gdp_per_capita_value": 40963.837337041,
+    "latest_unemployment_value": 7.445,
+    "latest_inflation_value": 5.22236748369725,
+    "latest_labor_force_participation_value": 56.265,
+    "latest_employment_to_population_ratio_value": 52.076,
+    "latest_total_population_value": 67935660
+  },
+  {
+    "indicator_value": "GDP (current US$)",
+    "country_name": "Ireland",
+    "latest_gdp_value": 529244870222.765,
+    "date_value": "2022",
+    "latest_gdp_growth_value": 11.9695802975001,
+    "latest_gdp_per_capita_value": 104038.946076296,
+    "latest_unemployment_value": 4.362,
+    "latest_inflation_value": 7.8073754099672,
+    "latest_labor_force_participation_value": 65.537,
+    "latest_employment_to_population_ratio_value": 62.678,
+    "latest_total_population_value": 5086988
+  },
+  {
+    "indicator_value": "GDP (current US$)",
+    "country_name": "United States",
+    "latest_gdp_value": 25462700000000,
+    "date_value": "2022",
+    "latest_gdp_growth_value": 2.06159311851432,
+    "latest_gdp_per_capita_value": 76398.5917422054,
+    "latest_unemployment_value": 3.611,
+    "latest_inflation_value": 8.00279982052117,
+    "latest_labor_force_participation_value": 61.891,
+    "latest_employment_to_population_ratio_value": 59.656,
+    "latest_total_population_value": 333287557
+  },
+  {
+    "indicator_value": "GDP (current US$)",
+    "country_name": "Euro area",
+    "latest_gdp_value": 14040893546587.3,
+    "date_value": "2022",
+    "latest_gdp_growth_value": 3.48041902878602,
+    "latest_gdp_per_capita_value": 40755.0473759676,
+    "latest_unemployment_value": 6.71918909105278,
+    "latest_inflation_value": 8.3954829799334,
+    "latest_labor_force_participation_value": 57.5608314053032,
+    "latest_employment_to_population_ratio_value": 53.6931533580792,
+    "latest_total_population_value": 344519132
+  },
+  {
+    "indicator_value": "GDP (current US$)",
+    "country_name": "World",
+    "latest_gdp_value": 100562011134034,
+    "date_value": "2022",
+    "latest_gdp_growth_value": 3.08032177798063,
+    "latest_gdp_per_capita_value": 12647.480789067,
+    "latest_unemployment_value": 5.77270990159382,
+    "latest_inflation_value": 7.96757361617946,
+    "latest_labor_force_participation_value": 59.893423323498,
+    "latest_employment_to_population_ratio_value": 56.4360189770646,
+    "latest_total_population_value": 7951149546
+  }
+]
